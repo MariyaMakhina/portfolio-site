@@ -1,0 +1,61 @@
+{% load wagtailimages_tags cafe_tags %}
+
+<div class="menu-block-content">
+    <!-- Фото категории (только для первого блока категории) -->
+    {% if block_data.is_first and block_data.category_image %}
+        {% image block_data.category_image fill-500x500 format-webp as cat_img %}
+            <div class="block-category-image" 
+                style="background-image: url('{{ cat_img.url }}'); 
+                        {{ cat_img.background_position_style }}">
+            </div>
+    {% elif block_data.is_first %}
+        <div class="block-category-image no-image">
+            <h4 class="block-category-title">{{ block_data.category_name }}</h4>
+        </div>
+    {% endif %}
+    
+    <!-- Таблица товаров -->
+    <div class="block-items-table">
+        <table>
+            <thead>
+                <tr>
+                    <td>{{ block_data.category_name }}</td>
+                    {% for volume in block_data.volumes %}  <!-- Используем volumes из блока -->
+                        <td align="center">{{ volume.name }}</td>
+                    {% endfor %}
+                </tr>
+                <tr><td>   </td></tr>
+            </thead>
+            <tbody>
+                {% for item in block_data.items %}
+                    <tr>
+                        <td class="item-name">
+                            {{ item.name }}
+                            {% if item.description %}
+                                <br><small>{{ item.description }}</small>
+                            {% endif %}
+                        </td>
+                        {% for volume in block_data.volumes %}  <!-- Используем volumes из блока -->
+                            <td class="item-price">
+                                {% with price=item.prices.all|get_price_for_volume:volume.id %}
+                                    {% if price %}
+                                        {{ price.price }} ₽
+                                    {% else %}
+                                        —
+                                    {% endif %}
+                                {% endwith %}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <!-- Индикатор продолжения (если есть еще товары) -->
+    {% if not block_data.is_last %}
+        <div class="block-continue">
+            <span>→ продолжение на следующем слайде ({{ block_data.block_index }}/{{ block_data.total_blocks }})</span>
+        </div>
+    {% endif %}
+</div>

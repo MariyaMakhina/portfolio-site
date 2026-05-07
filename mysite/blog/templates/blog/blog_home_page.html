@@ -1,0 +1,67 @@
+{% load static wagtailcore_tags wagtailimages_tags %}
+
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page.studio_name }} | Студия фотографии</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/blog/blog.css' %}">
+</head>
+<body class="home-page">
+{% if page.background_image %}
+  {% image page.background_image fill-1920x1080 format-webp as bg_img %}
+    <section class="hero" style="background-image: url('{{ bg_img.url }}'); background-position: center; background-size: cover;">
+        <!-- Верхняя часть -->
+       {% include "blog/header_photo.html" %}        
+        <!-- Центр -->
+        <div class="center-content">
+          <div class="title_name">
+            <h1 class="studio-name">{{ page.studio_name }}</h1>
+            <p>{{ page.studio_tagline }}</p>
+          </div>
+        </div>
+        
+        <!-- Нижняя часть -->
+        <div class="footer-hero flex_row_between">
+            <nav class="nav-footer">
+              {% if page.portfolio_page %}
+                  {% with portfolio_url=page.portfolio_page.url %}
+                      
+                      {% if page.category_1_name %}
+                          <a href="{{ portfolio_url }}?category=1" class="category-link">
+                              {{ page.category_1_name }}
+                          </a>
+                      {% endif %}
+                      
+                      {% if page.category_2_name %}
+                          <a href="{{ portfolio_url }}?category=2" class="category-link">
+                              {{ page.category_2_name }}
+                          </a>
+                      {% endif %}
+                      
+                      {% if page.category_3_name %}
+                          <a href="{{ portfolio_url }}?category=3" class="category-link">
+                              {{ page.category_3_name }}
+                          </a>
+                      {% endif %}
+                      
+                      {% if page.category_4_name %}
+                          <a href="{{ portfolio_url }}?category=4" class="category-link">
+                              {{ page.category_4_name }}
+                          </a>
+                      {% endif %}
+                      
+                  {% endwith %}
+            {% endif %}
+            </nav>
+            
+            <div class="photo-credit">
+                {{ page.photo_credit }}
+            </div>
+        </div>
+    </section>
+{% endif %}
+</body>
+</html>

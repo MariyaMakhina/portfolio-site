@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+<div class="blog-page">
+    <div class="container">
+        {% include "includes/button_back.html" with show_home_button=True %}
+        <header>
+            {% if settings.home.SocialMediaSettings.show_in_header %}
+                {% include "includes/social_icons.html" %}
+            {% endif %}
+        </header>
+        <!-- Заголовок страницы -->
+        <div class="blog-title">
+            <h1>{{ page.title }}</h1>
+        </div>
+        
+        {% if page.intro %}
+            <div class="blog-intro">
+                {{ page.intro|richtext }}
+            </div>
+        {% endif %}
+        
+        <!-- Список всех статей -->
+        {% if blog_posts %}
+            <div class="blog-all-posts">
+                {% for post in blog_posts %}
+                    <article class="blog-post-full">
+                        <h2 class="blog-post-title">
+                            {{ post.title }}
+                        </h2>
+                        <div class="block-img-descr">
+                            <div class="blog-post-image">
+                                {% if post.image %}
+                                    {% image post.image original format-webp as post_img %}
+                                    <img src="{{ post_img.url }}" alt="{{ post.title }}">
+                            </div>
+                            {% endif %}
+                            
+                            <div class="blog-post-details">
+                                
+                                {% if post.intro %}
+                                    <p class="blog-post-description">{{ post.intro }}</p>
+                                {% else %}
+                                    <p class="blog-post-description">{{ post.body|striptags|truncatewords:40 }}</p>
+                                {% endif %}
+                                
+                            </div>
+                        </div>
+                        <div class="block-date-link">
+                            <div class="blog-post-date">
+                                {{ post.date|date:"d.m.Y" }}
+                            </div>
+                            
+                            <!-- Передаём номер страницы в параметр from_page -->
+                            <a href="{{ post.url }}?from_page={{ blog_posts.number }}" class="blog-post-readmore">
+                                Читать статью  &nbsp;&nbsp; &rang;
+                            </a>
+                        </div>
+                    </article>
+                {% endfor %}
+            </div>
+
+           <!-- ===== ПАГИНАЦИЯ С НОМЕРАМИ СТРАНИЦ ===== -->
+            {% if blog_posts.paginator.num_pages > 1 %}
+                <div class="pagination">
+                    <!-- Кнопка "Назад" -->
+                    {% if blog_posts.has_previous %}
+                        <a href="?page={{ blog_posts.previous_page_number }}" class="pagination__prev">
+                            ←
+                        </a>
+                    {% else %}
+                        <span class="pagination__prev disabled">←</span>
+                    {% endif %}
+                    
+                    <!-- Номера страниц -->
+                    <div class="pagination__numbers">
+                            {% for num in blog_posts.paginator.page_range %}
+                            {% if num == blog_posts.number %}
+                                <span class="pagination__number active">{{ num }}</span>
+                            {% elif num > blog_posts.number|add:-3 and num < blog_posts.number|add:3 %}
+                                <a href="?page={{ num }}" class="pagination__number">{{ num }}</a>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    
+                    <!-- Кнопка "Вперёд" -->
+                    {% if blog_posts.has_next %}
+                        <a href="?page={{ blog_posts.next_page_number }}" class="pagination__next">
+                            →
+                        </a>
+                    {% else %}
+                        <span class="pagination__next disabled">→</span>
+                    {% endif %}
+                </div>
+            {% endif %}
+
+        {% else %}
+            <div class="blog-empty">
+                <p>Статьи пока не добавлены.</p>
+                <p>Загляните позже - здесь скоро появятся интересные материалы!</p>
+            </div>
+        {% endif %}
+
+    </div>
+</div>
+    {% include "blocks/button_up_block.html" %}
+{% endblock %}

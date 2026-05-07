@@ -1,0 +1,82 @@
+{% extends "base_photo.html" %}
+{% load wagtailcore_tags wagtailimages_tags static %}
+
+{% block content %}
+<div class="project-detail">
+    <div class="container">
+        
+        <!-- Навигация назад -->
+        <div class="back-nav">
+            <a href="{% firstof request.GET.from page.get_parent.url 'javascript:history.back()' %}" class="back-link">
+                <img src="{% static 'img/blog/button_back.svg' %}" alt="←"> <span>Все посты</span>
+            </a>
+        </div>
+
+        <!-- Главное изображение (если есть) -->
+        {% if page.post_image %}
+            {% image page.post_image original format-webp as main_img %}
+            <div class="project-main-image">
+                <img src="{{ main_img.url }}" alt="{{ main_img.alt|default:page.title }}">
+                    <h1 class="project-title">{{ page.title }}</h1>
+                    <div class="date_category simple-text">
+                        <span class="project-date">{{ page.date|date:"d E Y" }}</span>
+                    </div>
+                                  <!-- Теги -->
+                    {% if page.tags.all %}
+                        <div class="blog-tags">
+                            <span>Теги:</span>
+                            {% for tag in page.tags.all %}
+                                <a href="{{ page.get_parent.url }}?tag={{ tag.name }}" class="tag-link">#{{ tag.name }}</a>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    <div class="simple-text justify-class blog-intro">{{ page.intro }}</div>
+            
+            </div>
+        {% else %}
+            <!-- если без главного фото -->
+            <h1 class="project-title">{{ page.title }}</h1>
+            <div class="date_category simple-text">
+                <span class="project-date">{{ page.date|date:"d E Y" }}</span>
+            </div>
+                      <!-- Теги -->
+            {% if page.tags.all %}
+                <div class="blog-tags">
+                    <span>Теги:</span>
+                    {% for tag in page.tags.all %}
+                        <a href="{{ page.get_parent.url }}?tag={{ tag.name }}" class="tag-link">#{{ tag.name }}</a>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <div class="simple-text justify-class blog-intro">{{ page.intro }}</div>
+        
+
+        {% endif %}
+
+        <!-- Основной контент -->
+        <div class="blog-content simple-text">
+            {{ page.body|richtext }}
+        </div>
+        
+        <div class="clearfix"></div>
+
+        <!-- Галерея изображений-->
+        {% if page.gallery_images.all %}
+            <div class="photo-grid">
+                {% for item in page.gallery_images.all %}
+                    {% with image=item.image %}
+                        <div class="grid-item 
+                            {% if image.width > image.height %}item-landscape{% else %}item-portrait{% endif %}">
+                            {% image image max-1000x800 format-webp loading="lazy" class="grid-image" %}
+                            {% if item.caption %}
+                                <p class="image-caption">{{ item.caption }}</p>
+                            {% endif %}
+                        </div>
+                    {% endwith %}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+<div class="project-content-block">
+    {% if value.title %}
+        <h3 class="block-title">{{ value.title }}</h3>
+    {% endif %}
+    
+    {% if value.description %}
+        <div class="block-description">{{ value.description|richtext }}</div>
+    {% endif %}
+    
+    {% if value.image %}
+        {% image value.image original as block_img %}
+        <div class="block-image">
+            <img src="{{ block_img.url }}" alt="{{ value.title|default:'Изображение проекта' }}">
+        </div>
+    {% endif %}
+</div>

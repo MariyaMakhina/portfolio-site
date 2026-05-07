@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags %}
+
+{% block content %}
+    {% for block in page.page_sections %}
+        {% include_block block %}
+    {% endfor %}
+    
+    {# Кнопка наверх #}
+    {% if page.show_button_up %}
+        {% include "blocks/button_up_block.html" %}
+    {% endif %}
+{% endblock %}

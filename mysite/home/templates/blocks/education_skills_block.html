@@ -1,0 +1,29 @@
+{% load wagtailcore_tags %}
+
+{# ЗАГОЛОВОК БЛОКА (до section) #}
+<div class="razdel">
+    <div class="line-razdel"></div>
+    <h1>Образование и навыки</h1>
+    <div class="line-razdel"></div>
+</div>
+
+<section id="section-education">
+    <div class="education-skills-grid">
+        {% if value.education %}
+            <div class="education-list">
+                <h2>{{ value.education_title|default:"Образование" }}</h2>
+                {% for item in value.education %}
+                    {% include_block item %}
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% if value.skills %}
+            <div class="skills-list">
+                <h2>{{ value.skills_title|default:"Навыки" }}</h2>
+                {% for skill in value.skills %}
+                    {% include_block skill %}
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+</section>

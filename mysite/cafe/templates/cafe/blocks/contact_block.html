@@ -1,0 +1,17 @@
+{% load wagtailcore_tags %}
+<div class="contact-block">
+    <div class="row">
+        <div class="dark-block mini-block">
+            {% for block in value.left_content %}
+                {% include_block block %}
+            {% endfor %}
+            
+           
+        </div>
+        <div class="dark-block mini-block">
+            {% for block in value.right_content %}
+                {% include_block block %}
+            {% endfor %}
+        </div>
+    </div>
+</div>

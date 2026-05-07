@@ -1,0 +1,24 @@
+{% load wagtailcore_tags %}
+
+<div class="navigation-buttons">
+    {% if show_home_button %}
+        <a href="/" class="nav-btn nav-btn--home">
+            <span class="nav-btn__icon">&lang;&lang;</span>
+            <span class="nav-btn__text">На главную</span>
+        </a>
+    {% endif %}
+    
+    {% if show_blog_button %}
+        <a href="{{ page.get_parent.url }}?page={{ request.GET.from_page|default:1 }}" class="nav-btn nav-btn--blog">
+            <span class="nav-btn__icon">&lang;</span>
+            <span class="nav-btn__text">Ко всем статьям</span>
+        </a>
+    {% endif %}
+    
+    {% if show_back_button %}
+        <a href="javascript:history.back()" class="nav-btn nav-btn--back">
+            <span class="nav-btn__icon">&lang;</span>
+            <span class="nav-btn__text">Назад</span>
+        </a>
+    {% endif %}
+</div>

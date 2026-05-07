@@ -1,0 +1,16 @@
+{% load wagtailcore_tags %}
+
+<section id="section-home">
+    <header>
+        {% if settings.home.SocialMediaSettings.show_in_header %}
+            {% include "includes/social_icons.html" %}
+        {% endif %}
+    </header>
+    <div class="titlename">{{ value.name }}</div>
+    <h1>{{ value.profession|richtext }}</h1>
+    {% if value.button_text and value.button_link %}
+    <div class="div_button_sell">
+        <a href="{{ value.button_link }}">{{ value.button_text }}</a>
+    </div>
+    {% endif %}
+</section>

@@ -1,0 +1,31 @@
+{% if social_settings %}
+    {% if social_settings.phone %}
+        <a href="tel:{{ social_settings.phone }}" class="phone_url"></a>
+    {% endif %}
+    {% if social_settings.github_url %}
+        <a href="{{ social_settings.github_url }}" class="github_url"></a>
+    {% endif %}
+    {% if social_settings.linkedin_url %}
+        <a href="{{ social_settings.linkedin_url }}" class="linkedin_url"></a>
+    {% endif %}
+    {% if social_settings.mastodon_url %}
+        <a href="{{ social_settings.mastodon_url }}" class="mastodon_url"></a>
+    {% endif %}
+    {% if social_settings.telegram_url %}
+        <a href="{{ social_settings.telegram_url }}" class="telegram_url"></a>
+    {% endif %}
+    {% if social_settings.instagram_url %}
+        <a href="{{ social_settings.instagram_url }}" class="instagram_url"></a>
+    {% endif %}
+    {% if social_settings.vk_url %}
+        <a href="{{ social_settings.vk_url }}" class="vk_url"></a>
+    {% endif %}
+    {% if social_settings.whatsapp %}
+        <a href="{{ social_settings.whatsapp }}" class="whatsapp_url"></a>
+    {% endif %}
+    {% if social_settings.mail %}
+        <a href="mailto:{{ social_settings.mail }}" class="mail_url"></a>
+    {% endif %}
+
+{% endif %}
+    

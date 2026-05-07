@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+<div class="projects-index">
+    <div class="container">
+        <h1>{{ page.title }}</h1>
+        
+        <div class="projects-grid">
+            {% for project in projects %}
+                <div class="project-card">
+                    {% if project.image %}
+                        {% image project.image fill-300x200 as img %}
+                        <img src="{{ img.url }}" alt="{{ project.title }}">
+                    {% endif %}
+                    <h3><a href="{{ project.url }}">{{ project.title }}</a></h3>
+                    <p>{{ project.intro|truncatewords:20 }}</p>
+                </div>
+            {% empty %}
+                <p>Нет проектов</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

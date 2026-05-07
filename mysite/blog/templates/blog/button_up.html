@@ -1,0 +1,25 @@
+<!-- Кнопка "Наверх" -->
+<button id="scrollToTopBtn" class="scroll-to-top" aria-label="Наверх"></button>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+    
+    // Показываем кнопку при прокрутке вниз
+    window.addEventListener('scroll', function() {
+        if (window.scrollY > 300) {  // показываем после прокрутки на 300px
+            scrollToTopBtn.classList.add('show');
+        } else {
+            scrollToTopBtn.classList.remove('show');
+        }
+    });
+    
+    // Скролл наверх при клике
+    scrollToTopBtn.addEventListener('click', function() {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+});
+</script>

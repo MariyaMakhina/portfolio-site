@@ -1,0 +1,9 @@
+{% load wagtailcore_tags %}
+
+<div class="education-item">
+    <h3>{{ self.title }}</h3>
+    <p class="institution">{{ self.institution }}, {{ self.year }}</p>
+    {% if self.description %}
+    <p class="description">{{ self.description|richtext }}</p>
+    {% endif %}
+</div>

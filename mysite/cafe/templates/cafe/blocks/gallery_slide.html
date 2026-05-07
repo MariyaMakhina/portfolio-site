@@ -1,0 +1,21 @@
+{% load wagtailimages_tags wagtailcore_tags %}
+<div class="gallery-slide-content">
+    <div class="row">
+        <div class="dark-block mini-block block-img-gallery">
+            {% image value.image fill-350x500 format-webp as gallery_img %}
+            <div class="gallery-image" 
+                style="background-image: url('{{ gallery_img.url }}'); 
+                        {{ gallery_img.background_position_style }}">
+            </div>
+            <!-- <img src="{{ gallery_img.url }}" alt="" class="gallery-image" loading="lazy"> -->
+        </div>
+        <div class="dark-block mini-block">
+            <div class="gallery-description">
+                 {% if value.title %}
+                    <h3 class="gallery-title">{{ value.title }}</h3>
+                {% endif %}
+                {{ value.description|richtext }}
+            </div>
+        </div>
+    </div>
+</div>

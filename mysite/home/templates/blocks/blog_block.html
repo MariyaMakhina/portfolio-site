@@ -1,0 +1,39 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+
+<div class="blog-container">
+    <div class="blog-grid">
+        {% for post in posts %}
+        <a href="{{ post.url }}" class="blog-image-link">
+            <article class="blog-card">
+                {% if post.image %}
+                    {% image post.image fill-350x250 as blog_img %}
+                        <div class="blog-image-wrapper">
+                            <img src="{{ blog_img.url }}" alt="{{ post.title }}" class="blog-image">
+                        </div>
+                {% endif %}
+                
+                <div class="blog-content">
+                    <div class="blog-meta">
+                        <span class="blog-date">{{ post.date|date:"d.m.Y" }}</span>
+                    </div>
+                    
+                    <h3 class="blog-title">{{ post.title }}</h3>
+                    
+                    {% if post.intro %}
+                        <p class="blog-excerpt">{{ post.intro }}</p>
+                    {% else %}
+                        <p class="blog-excerpt">{{ post.body }}</p>
+                    {% endif %}
+                    </div>
+            </article>
+        </a>
+        {% endfor %}
+    </div>
+    
+    <div class="blog-footer">
+        <a href="{% slugurl 'blog_portfolio' %}" class="blog-all-button">
+            {{ button_text|default:"Все статьи" }}
+        </a>
+    </div>
+</div>

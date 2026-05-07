@@ -1,0 +1,180 @@
+{% load static wagtailcore_tags wagtailimages_tags cafe_tags %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if page.seo_title %}{{ page.seo_title }}{% else %}{{ page.cafe_name }}{% endif %}</title>
+    <meta name="description" content="{% if page.search_description %}{{ page.search_description }}{% endif %}">
+    
+    <!-- Slick Carousel CSS (локальные) -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/cafe/slick.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/cafe/slick-theme.css' %}">
+
+    <!-- CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/cafe/cafe.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+
+<!-- Hero секция -->
+{% if page.hero_background %}
+    {% image page.hero_background original format-webp as hero_img %}
+        <section id="section-hero" style="background-image: url('{{ hero_img.url }}');">
+            <div class="block-content">
+                {% include "cafe/includes/header.html" %}
+
+                <div class="titlename">
+                    <p class="name"> {{ page.cafe_name }} </p>
+                    <p class="slogan">{{ page.slogan }}</p>
+                    <p class="describe">{{ page.description }}</p>
+                </div>
+
+                <div class="button_sell"><a href="#section-form_back">{{ page.hero_booking_button_text }}</a></div>
+                {% if page.hero_menu_button_text %}
+                <div class="button_down">
+                    <a href="#section-menu">
+                        {% if page.button_menu_icon and page.button_menu_icon_position == 'left' %}
+                            {% image page.button_menu_icon width-20 as icon %}
+                                <img src="{{ icon.url }}" alt="" class="button-icon left-icon">
+                            {% endif %}
+                            
+                        <span class="button-text">{{ page.hero_menu_button_text }}</span>
+                            
+                        {% if page.button_menu_icon and page.button_menu_icon_position == 'right' %}
+                            {% image page.button_menu_icon width-20 as icon %}
+                                <img src="{{ icon.url }}" alt="" class="button-icon right-icon">
+                        {% endif %}
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </section>
+{% endif %}
+
+
+<!-- Секция меню -->
+{% if page.show_menu_section and menu_slides %}
+    {% if page.menu_background %}
+        {% image page.menu_background fill-1920x1080 format-webp as menu_img %}
+        <section id="section-menu" style="background-image: url('{{ menu_img.url }}'); background-position: center; background-size: cover;">
+    {% else %}
+        <section id="section-menu" style="background-color: var(--color-dark-brown);">
+    {% endif %}
+        <div class="block-content">
+            <div class="title-block light-block mrg-top"><h1>{{ page.menu_title }}</h1></div>
+            <div class="menu-carousel">
+                {% for block in menu_slides %}
+                    <div class="menu-slide">
+                        <div class="slide-grid single-block">
+                            <div class="menu-block light-block">
+                                {% include "cafe/includes/menu_block.html" with block_data=block %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+{% endif %}
+
+<!-- Секция галереи -->
+{% if page.show_gallery_section and page.gallery_carousel %}
+    {% if page.gallery_background %}
+        {% image page.gallery_background fill-1920x1080 format-webp as gallery_img %}
+        <section id="section-gallery" style="background-image: url('{{ gallery_img.url }}'); background-position: center; background-size: cover;">
+    {% else %}
+        <section id="section-gallery" style="background-color: var(--color-dark-brown);">
+    {% endif %}
+        <div class="block-content">
+            <div class="title-block dark-block mrg-top"><h1>{{ page.gallery_title }}</h1></div>
+            <div class="gallery-carousel">  <!-- Изменено: gallery-grid → gallery-carousel -->
+                {% for slide in page.gallery_carousel %}
+                    <div class="gallery-slide">  <!-- Изменено: gallery-item → gallery-slide -->
+                        {% include_block slide %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>  
+    </section>
+{% endif %}
+
+
+<!-- Секция бронирования -->
+{% if page.show_booking_section %}
+    {% if page.booking_background %}
+        {% image page.booking_background fill-1920x1080 format-webp as booking_img %}
+        <section id="section-form_back" style="background-image: url('{{ booking_img.url }}'); background-position: center; background-size: cover;">
+    {% else %}
+        <section id="section-form_back">
+    {% endif %}
+        <div class="block-content">
+            <div class="form_fields mrg-top">
+                <p class="title-booking item-centr">{{ page.booking_title }}</p>
+                {% if page.booking_intro %}
+                    <div class="booking-intro item-centr">
+                        {{ page.booking_intro|richtext }}
+                    </div>
+                {% endif %}
+                
+                <div class="booking-form-container">
+                    <form method="post" action="{% pageurl page %}" class="booking-form" id="booking-form" data-success-message="{{ page.booking_success_message|striptags }}">
+                        {% csrf_token %}
+                        
+                        {% if form_errors %}
+                        <div class="alert alert-error">
+                            <ul>
+                                {% for error in form_errors %}
+                                <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endif %}
+                        
+              
+                        {% for block in page.booking_form %}
+                            {% include_block block with form_data=form_data %}
+                        {% endfor %}
+                        
+                        <button type="submit" class="submitBtn">
+                            {{ page.booking_button_text }}
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endif %}
+
+<!-- Секция контактов -->
+{% if page.show_contacts_section and page.contacts %}
+    {% if page.contacts_background %}
+        {% image page.contacts_background fill-1920x1080 format-webp as contacts_img %}
+        <section id="section-contacts" style="background-image: url('{{ contacts_img.url }}'); background-position: center; background-size: cover;">
+    {% else %}
+        <section id="section-contacts" style="background-color: var(--color-dark-brown);">
+    {% endif %}
+        <div class="block-content">
+            <div class="title-block dark-block mrg-top"><h1> {{ page.contacts_title }}</h1></div>
+            {% for block in page.contacts %}
+                {% include_block block with social_settings=social_settings %}
+            {% endfor %}
+        </div>
+    </section>
+{% endif %}
+
+
+<!-- jQuery (нужен для Slick) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Slick Carousel JS (локальный) -->
+<script src="{% static 'js/cafe/slick.min.js' %}"></script>
+
+
+<!-- JavaScript -->
+<script src="{% static 'js/cafe/main.js' %}"></script>
+{% block extra_js %}{% endblock %}
+
+</body>
+</html>

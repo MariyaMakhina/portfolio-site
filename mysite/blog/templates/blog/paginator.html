@@ -1,0 +1,42 @@
+{% if projects.paginator.num_pages > 1 %}
+    <div class="pagination">
+        <!-- Стрелка "назад" (всегда ссылка) -->
+          <div class="but">
+
+        {% if projects.has_previous %}
+            <a href="?page={{ projects.previous_page_number }}{% if current_category %}&category={{ current_category }}{% endif %}" class="prev">
+                ⇐
+            </a>
+        {% else %}
+            <a href="?page=1{% if current_category %}&category={{ current_category }}{% endif %}" class="prev disabled">
+                ⇐
+            </a>
+        {% endif %}
+          </div>
+        
+        <!-- Номера страниц (всегда ссылки) -->
+        {% for page_num in projects.paginator.page_range %}
+          <div class="but">
+
+            <a href="?page={{ page_num }}{% if current_category %}&category={{ current_category }}{% endif %}" 
+              class="{% if page_num == projects.number %}current{% endif %}">
+                {{ page_num }}
+            </a>
+          </div>
+        {% endfor %}
+        
+        <!-- Стрелка "вперёд" (всегда ссылка) -->
+        <div class="but">
+
+        {% if projects.has_next %}
+            <a href="?page={{ projects.next_page_number }}{% if current_category %}&category={{ current_category }}{% endif %}" class="next">
+                ⇒
+            </a>
+        {% else %}
+            <a href="?page={{ projects.paginator.num_pages }}{% if current_category %}&category={{ current_category }}{% endif %}" class="next disabled">
+                ⇒
+            </a>
+        </div>
+        {% endif %}
+    </div>
+{% endif %}

@@ -1,0 +1,9 @@
+<div class="contact-info-item">
+    <h4 style="text-align: center;">{{ value.title }}</h4>
+    <!-- <p style="text-align: center;">{{ value.value|linebreaksbr }}</p> -->
+    {% if social_settings %}
+        <div class="social-links">
+            <div class="social social-footer">{% include "cafe/includes/footer_social.html" %}</div>
+        </div>
+        {% endif %}
+</div>

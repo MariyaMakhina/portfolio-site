@@ -1,0 +1,14 @@
+{% load wagtailcore_tags %}
+
+{# ЗАГОЛОВОК БЛОКА (до section) #}
+{% if value.title %}
+<div class="razdel">
+    <div class="line-razdel"></div>
+    <h1>{{ value.title }}</h1>
+    <div class="line-razdel"></div>
+</div>
+{% endif %}
+
+<section id="section-blog">
+    {% include "blocks/blog_block.html" with posts=latest_posts button_text=value.button_text %}
+</section>

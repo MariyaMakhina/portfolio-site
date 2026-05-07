@@ -1,0 +1,13 @@
+{% load wagtailimages_tags wagtailcore_tags %}
+<div class="menu-category">
+    <h3>{{ value.category }}</h3>
+    {% if value.category_image %}
+        {% image value.category_image original format-webp as cat_img %}
+        <img src="{{ cat_img.url }}" alt="{{ value.category }}" class="category-image" loading="lazy">
+    {% endif %}
+    <div class="menu-items">
+        {% for item in value.menu_items %}
+            {% include_block item %}
+        {% endfor %}
+    </div>
+</div>

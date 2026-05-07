@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+<div class="project-detail">
+    <div class="container">
+        
+        <div class="project-header">
+            <h1 class="project-title">{{ page.title }}</h1>
+            {% if page.intro %}
+                <p class="project-intro">{{ page.intro }}</p>
+            {% endif %}
+        </div>
+        
+        {% if page.image %}
+            {% image page.image original as main_img %}
+            <div class="project-main-image">
+                <img src="{{ main_img.url }}" alt="{{ page.title }}">
+            </div>
+        {% endif %}
+        
+        {% if page.video %}
+            <div class="project-video">
+                <video controls width="100%">
+                    <source src="{{ page.video.file.url }}" type="video/mp4">
+                    Ваш браузер не поддерживает видео.
+                </video>
+            </div>
+        {% endif %}
+        
+        {% if page.technologies %}
+            <div class="project-technologies">
+                <strong>Технологии:</strong>
+                {% for tech in page.technologies.split|slice:",5" %}
+                    <span class="tech-tag">{{ tech }}</span>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        <div class="project-content">
+            {% for block in page.content %}
+                {% include_block block %}
+            {% endfor %}
+        </div>
+        
+        {% if page.get_link_url %}
+            <div class="project-link">
+                <a href="{{ page.get_link_url }}" class="project-button" target="_blank">
+                    Посмотреть проект →
+                </a>
+            </div>
+        {% endif %}
+        
+    </div>
+</div>
+{% endblock %}

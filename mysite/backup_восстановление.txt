@@ -1,0 +1,67 @@
+bash
+
+# Распаковать код
+tar -xzf путь/backups/code_20250304_153045.tar.gz -C portfolio_site_4/
+
+# Восстановить базу
+cp путь/backups/db_20250304_153045.sqlite3 portfolio_site_4/db.sqlite3
+
+# Восстановить медиафайлы
+tar -xzf путь/backups/media_20250304_153045.tar.gz -C portfolio_site_4/
+
+# Восстановить зависимости
+cd portfolio_site_4
+python -m venv venv
+source venv/bin/activate
+pip install -r ../backups/requirements_20250304_153045.txt
+
+
+==========================================
+два файла. полное восстановление в текущий проект/замена
+
+Полное восстановление из ваших бэкапов
+bash
+cd /home/mariya/Desktop/Progrm/wagtail/websites/my_portfolio/portfolio_site_4
+
+# 1. ОСТАНОВИТЕ сервер, если он запущен (Ctrl+C)
+
+# 2. ДЕАКТИВИРУЙТЕ виртуальное окружение
+deactivate
+
+# 3. УДАЛИТЕ ВСЁ в текущей папке (кроме venv)
+rm -rf home/
+rm -rf mysite/
+rm -rf static/
+rm -rf media/
+rm -f manage.py
+rm -f db.sqlite3
+rm -f requirements.txt
+rm -f *.pyc
+rm -rf __pycache__/
+
+# 4. ВОССТАНОВИТЕ код и базу данных из первого архива
+echo "Восстанавливаю код и базу данных..."
+tar -xzf /home/mariya/Desktop/Progrm/wagtail/backups/code_20260304_140942.tar.gz -C .
+
+# 5. ВОССТАНОВИТЕ медиафайлы из второго архива
+echo "Восстанавливаю медиафайлы..."
+tar -xzf /home/mariya/Desktop/Progrm/wagtail/backups/media_20260304_140942.tar.gz -C .
+
+# 6. ПРОВЕРЬТЕ, что восстановилось
+echo "Содержимое после восстановления:"
+ls -la
+
+# 7. АКТИВИРУЙТЕ виртуальное окружение
+source venv/bin/activate
+
+# 8. ЕСЛИ есть requirements.txt в папке, установите зависимости
+if [ -f requirements.txt ]; then
+    echo "Устанавливаю зависимости из requirements.txt..."
+    pip install -r requirements.txt
+else
+    echo "requirements.txt не найден, устанавливаю Wagtail..."
+    pip install wagtail
+fi
+
+# 9. ЗАПУСТИТЕ сервер
+python manage.py runserver

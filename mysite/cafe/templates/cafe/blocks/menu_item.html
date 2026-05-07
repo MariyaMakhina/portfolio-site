@@ -1,0 +1,13 @@
+{% load wagtailcore_tags %}
+<div class="menu-item">
+    <div class="menu-item-header">
+        <span class="menu-item-name">{{ value.name }}</span>
+        <span class="menu-item-price">{{ value.price }} ₽</span>
+    </div>
+    {% if value.description %}
+        <p class="menu-item-description">{{ value.description }}</p>
+    {% endif %}
+    {% if value.volume %}
+        <span class="menu-item-volume">{{ value.volume }}</span>
+    {% endif %}
+</div>

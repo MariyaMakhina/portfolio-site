@@ -1,0 +1,68 @@
+{% extends "base_photo.html" %}
+{% load static wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+<div class="project-detail">
+    <div class="container">
+            <!-- Навигация назад / запомнили путь на прошлой странице и на него вернулись -->
+        <div class="back-nav">
+            <a href="{% firstof request.GET.from page.get_parent.url page.get_parent.specific.url 'javascript:history.back()' %}" class="back-link">
+                <img src="{% static 'img/blog/button_back.svg' %}" alt="←"> <span>Все проекты</span> 
+            </a>
+        </div>
+        
+        <!-- Главное изображение -->
+        {% if page.main_image %}
+            {% image page.main_image width-1200 format-webp as main_img %}
+            <div class="project-main-image">
+                <img src="{{ main_img.url }}" alt="{{ main_img.alt|default:page.title }}">
+                    <h1 class="project-title">{{ page.title }}</h1>
+                    <div class="date_category simple-text">
+                        <span class="project-date">{{ page.date|date:"d E Y" }}</span>
+                        <span class="point">•</span>
+                        <span class="project-category-label">{{ page.get_category_name }}</span>
+                    </div>
+                       <!-- Описание -->
+                    {% if page.description %}
+                        <div class="project-description simple-text">
+                            {{ page.description|richtext }}
+                        </div>
+                    {% endif %}
+            </div>
+        {% else %}
+            <!-- если без главного фото -->
+            <h1 class="project-title">{{ page.title }}</h1>
+            <div class="date_category simple-text">
+                <span class="project-date">{{ page.date|date:"d E Y" }}</span>
+                <span class="point">•</span>
+                <span class="project-category-label">{{ page.get_category_name }}</span>
+            </div>
+            <div class="simple-text">{{ page.mini_description|richtext }}</div>
+                <!-- Описание -->
+            {% if page.description %}
+                <div class="project-description simple-text">
+                    {{ page.description|richtext }}
+                </div>
+            {% endif %}
+
+        {% endif %}
+        
+        <!-- Галерея -->
+        {% if page.gallery %}
+            <div class="photo-grid">
+                {% for block in page.gallery %}
+                    {% with image=block.value %}
+                        <div class="grid-item 
+                                {% if image.width > image.height %}item-landscape{% else %}item-portrait{% endif %}">
+                                    {% image image format-webp loading="lazy" class="grid-image" %}
+                        </div>
+                    {% endwith %}
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="gallery-empty">Нет фотографий в галерее</p>
+        {% endif %}
+
+    </div>
+</div>
+{% endblock %}

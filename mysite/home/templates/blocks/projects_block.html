@@ -1,0 +1,13 @@
+{% load wagtailcore_tags %}
+
+<section id="section-project">
+    <div class="razdel">
+        <h1>{{ self.title }}</h1>
+        <div class="line-razdel"></div>
+    </div>
+    <div class="block-content">
+        {% for project in self.projects %}
+            {% include_block project %}
+        {% endfor %}
+    </div>
+</section>

@@ -1,0 +1,24 @@
+{% load wagtailimages_tags %}
+
+<div class="boxs project-card">
+    {% if project.get_link_url %}
+        <a href="{{ project.get_link_url }}" class="link-block" target="_blank" rel="noopener noreferrer">
+    {% endif %}
+    
+        <div class="box">
+            <div class="imag-proj">
+                {% if project.image %}
+                    {% image project.image fill-350x250 as project_img %}
+                    <img src="{{ project_img.url }}" alt="{{ project.title }}">
+                {% endif %}
+            </div>
+            <div class="description">
+                <h3>{{ project.title }}</h3>
+                <div class="project-description">{{ project.intro|default:"" }}</div>
+            </div>
+        </div>
+    
+    {% if project.get_link_url %}
+        </a>
+    {% endif %}
+</div>

@@ -1,0 +1,54 @@
+{% extends "base_photo.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+{% if page.main_image %}
+    {% image page.main_image original format-webp as main_img %}
+    <div class="about-image" style="background-image: url('{{ main_img.url }}'); background-position: center; background-size: cover; background-repeat: no-repeat;">
+        <div class="gradient-div"></div>
+    </div>
+{% endif %}
+
+<div class="about-page">
+    <div class="container">
+        <h1 class="page-title">{{ page.title }}</h1>
+        <h3 class="page-mini_title simple-text">{{ page.mini_title }}</h3>
+
+        <div class="about-intro simple-text {% if page.content_blocks|length == 1 %} one-block {% else %} grid-block {% endif %}">
+            {% for block in page.content_blocks %}
+                <div class="content-item">
+                    {{ block.value|richtext }}
+                </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Блок: команда -->
+        <div class="team-section simple-text">
+            <h2 class="team-title center-content">{{ page.team_title }}</h2>
+            <p class="team-subtitle center-content">{{ page.team_subtitle }}</p>
+            
+            <div class="team-grid">
+                {% for member in page.team_members %}
+                    <div class="team-card">
+                        {% if member.value.photo %}
+                            {% image member.value.photo fill-300x300 format-webp as member_photo %}
+                            <div class="team-photo">
+                                <img src="{{ member_photo.url }}" alt="{{ member.value.name }}">
+                            </div>
+                        {% endif %}
+                        <h3 class="team-name">{{ member.value.name }}</h3>
+                        <p class="team-position">{{ member.value.position }}</p>
+                        <p class="team-description" lang="ru">{{ member.value.description }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <!-- Нижний текст -->
+            <div class="about-footer simple-text">
+            {{ page.footer_text|richtext }}
+        </div>
+        
+    </div>
+</div>
+{% endblock %}

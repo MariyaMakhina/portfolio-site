@@ -1,0 +1,59 @@
+{% load wagtailcore_tags %}
+<div class="header-container">
+    <!-- Правая часть - меню -->
+    <div class="header-menu">
+        <!-- Десктопное меню -->
+        <nav class="navigation">
+            <ul class="nav-menu">
+                <li><a href="#section-hero" class="nav-link">Главная</a></li>
+                
+                {% if page.show_menu_section and page.menu_gallery %}
+                <li><a href="#section-menu" class="nav-link">{{ page.menu_nav_title }}</a></li>
+                {% endif %}
+                
+                {% if page.show_gallery_section and page.gallery_carousel %}
+                <li><a href="#section-gallery" class="nav-link">{{ page.gallery_nav_title }}</a></li>
+                {% endif %}
+
+                {% if page.show_booking_section and page.booking_form %}
+                <li><a href="#section-form_back" class="nav-link">{{ page.booking_nav_title }}</a></li>
+                {% endif %}
+                        
+                {% if page.show_contacts_section and page.contacts %}
+                <li><a href="#section-contacts" class="nav-link">{{ page.contacts_nav_title }}</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+        
+        <!-- Мобильные иконки -->
+        <div class="mobile-icons">
+            <a href="#section-hero" class="mobile-icon icon-hero" title="Главная">
+                <i class="bi bi-house-door"></i>
+            </a>
+            
+            {% if page.show_menu_section and page.menu_gallery %}
+            <a href="#section-menu" class="mobile-icon icon-menu" title="{{ page.menu_nav_title }}">
+                <i class="bi bi-egg-fried"></i>
+            </a>
+            {% endif %}
+            
+            {% if page.show_gallery_section and page.gallery_carousel %}
+            <a href="#section-gallery" class="mobile-icon icon-gallery" title="{{ page.gallery_nav_title }}">
+                <i class="bi bi-camera"></i>
+            </a>
+            {% endif %}
+            
+            {% if page.show_booking_section and page.booking_form %}
+            <a href="#section-form_back" class="mobile-icon icon-booking" title="{{ page.booking_nav_title }}">
+                <i class="bi bi-calendar-check"></i>
+            </a>
+            {% endif %}
+            
+            {% if page.show_contacts_section and page.contacts %}
+            <a href="#section-contacts" class="mobile-icon icon-contact" title="{{ page.contacts_nav_title }}">
+                <i class="bi bi-telephone"></i>
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</div>

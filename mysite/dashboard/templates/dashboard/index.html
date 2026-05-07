@@ -1,0 +1,631 @@
+{% extends "wagtailadmin/base.html" %}
+{% load wagtailadmin_tags i18n %}
+
+{% block titletag %}Дашборд{% endblock %}
+
+{% block extra_css %}
+<link href="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.css" rel="stylesheet">
+<style>
+    /* ============================================ */
+    /* ПРОФЕССИОНАЛЬНЫЙ ДИЗАЙН ДАШБОРДА            */
+    /* ============================================ */
+    
+    .stats-row {
+        display: flex;
+        gap: 25px;
+        margin-bottom: 35px;
+        flex-wrap: wrap;
+    }
+    
+    .stat-card {
+        flex: 1;
+        min-width: 280px;
+        background: #ffffff;
+        border-radius: 20px;
+        padding: 24px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        border: 1px solid #eef2f6;
+        transition: all 0.2s ease;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .stat-card:hover {
+        box-shadow: 0 8px 24px rgba(67, 177, 176, 0.1);
+        border-color: #43b1b0;
+    }
+    
+    .stat-card-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+        border-bottom: 2px solid #43b1b0;
+    }
+    
+    .stat-icon {
+        width: 32px;
+        height: 32px;
+        color: #43b1b0;
+    }
+    
+    .stat-card-header h3 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 600;
+        color: #1a2a3a;
+        letter-spacing: -0.2px;
+    }
+    
+    .stat-main {
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+        margin-bottom: 24px;
+    }
+    
+    .stat-number {
+        font-size: 52px;
+        font-weight: 700;
+        color: #1a2a3a;
+        line-height: 1;
+    }
+    
+    .stat-number small {
+        font-size: 14px;
+        font-weight: 400;
+        color: #8ba0ae;
+    }
+    
+    .stat-items {
+        margin: 0 0 28px 0;
+        padding: 0;
+        list-style: none;
+        flex: 1;
+    }
+    
+    .stat-items li {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+        font-size: 14px;
+        color: #4a6572;
+    }
+    
+    .stat-items .label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .stat-items .label svg {
+        width: 18px;
+        height: 18px;
+    }
+    
+    .stat-items .value {
+        font-weight: 600;
+        color: #1a2a3a;
+        background: #f5f7f9;
+        padding: 2px 10px;
+        border-radius: 20px;
+    }
+    
+    .stat-items .placeholder-item {
+        visibility: hidden;
+        height: 34px;
+    }
+    
+    /* Кнопка черновиков */
+    .draft-button-wrapper {
+        margin-top: auto;
+    }
+    
+    .draft-toggle-btn {
+        width: 100%;
+        padding: 10px 16px;
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        color: #43b1b0;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        text-align: center;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+    
+    .draft-toggle-btn svg {
+        width: 16px;
+        height: 16px;
+    }
+    
+    .draft-toggle-btn:hover {
+        background: #43b1b0;
+        color: white;
+        border-color: #43b1b0;
+    }
+    
+    .draft-toggle-btn:hover svg {
+        stroke: white;
+    }
+    
+    .dropdown-content {
+        margin-top: 12px;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        background: white;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+    
+    .dropdown-content .listing {
+        margin: 0;
+    }
+    
+    .dropdown-content li {
+        padding: 12px 16px;
+        border-bottom: 1px solid #f1f5f9;
+    }
+    
+    .dropdown-content li:last-child {
+        border-bottom: none;
+    }
+    
+    .dropdown-content li:hover {
+        background: #f8fafc;
+    }
+    
+    .dropdown-content a {
+        color: #1a2a3a;
+        text-decoration: none;
+        font-weight: 500;
+    }
+    
+    .dropdown-content a:hover {
+        color: #43b1b0;
+    }
+    
+    .date-badge {
+        color: #94a3b8;
+        font-size: 11px;
+        float: right;
+    }
+    
+    /* ============================================ */
+    /* БЫСТРЫЕ ДЕЙСТВИЯ - СЕТКА КНОПОК             */
+    /* ============================================ */
+    
+    .action-panel {
+        background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+        border-radius: 20px;
+        padding: 24px;
+        margin: 35px 0;
+        border: 1px solid #eef2f6;
+    }
+    
+    .action-panel h4 {
+        margin: 0 0 20px 0;
+        font-size: 14px;
+        font-weight: 600;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    
+    .actions-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, auto));
+        gap: 12px;
+    }
+    
+    .action-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 10px 20px;
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 40px;
+        color: #334155;
+        font-size: 13px;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        cursor: pointer;
+    }
+    
+    .action-btn svg {
+        width: 16px;
+        height: 16px;
+    }
+        /* Заголовки с иконками */
+    h1, .action-panel h4, .chart-panel h4 {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    h1 svg, .action-panel h4 svg, .chart-panel h4 svg {
+        display: inline-block;
+        vertical-align: middle;
+    }
+    
+    .action-btn:hover {
+        background: #43b1b0;
+        border-color: #43b1b0;
+        color: white;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(67, 177, 176, 0.2);
+    }
+    
+    .action-btn:hover svg {
+        stroke: white;
+    }
+    
+    .action-btn-primary {
+        background: #43b1b0;
+        border-color: #43b1b0;
+        color: white;
+    }
+    
+    .action-btn-primary:hover {
+        background: #389b9a;
+        transform: translateY(-1px);
+    }
+    
+    /* ============================================ */
+    /* ГРАФИК                                      */
+    /* ============================================ */
+    
+    .chart-panel {
+        background: white;
+        border-radius: 20px;
+        padding: 24px;
+        border: 1px solid #eef2f6;
+        margin-top: 20px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    }
+    
+    .chart-panel h4 {
+        margin: 0 0 20px 0;
+        font-size: 16px;
+        font-weight: 600;
+        color: #1a2a3a;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    @media (max-width: 768px) {
+        .stats-row {
+            flex-direction: column;
+            gap: 15px;
+        }
+        .stat-number {
+            font-size: 40px;
+        }
+        .actions-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="nice-padding">
+    <h1 style="margin-bottom: 28px; font-size: 26px; font-weight: 600; display: flex; align-items: center; gap: 10px;">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="3" y="3" width="7" height="7" rx="1"/>
+            <rect x="14" y="3" width="7" height="7" rx="1"/>
+            <rect x="3" y="14" width="7" height="7" rx="1"/>
+            <rect x="14" y="14" width="7" height="7" rx="1"/>
+        </svg>
+    Дашборд портфолио
+    </h1>
+
+    <!-- ДВА БЛОКА: СТАТЬИ И ПРОЕКТЫ -->
+    <div class="stats-row">
+        
+        <!-- БЛОК 1: СТАТЬИ БЛОГА -->
+        <div class="stat-card">
+            <div class="stat-card-header">
+                <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                    <line x1="8" y1="8" x2="16" y2="8"/>
+                    <line x1="8" y1="12" x2="16" y2="12"/>
+                    <line x1="8" y1="16" x2="12" y2="16"/>
+                </svg>
+                <h3>Статьи блога</h3>
+            </div>
+            <div class="stat-main">
+                <span class="stat-number">{{ total_blog_posts|default:"0" }}</span>
+                <small>всего</small>
+            </div>
+            <ul class="stat-items">
+                <li>
+                    <span class="label">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 6L9 17l-5-5"/>
+                        </svg>
+                        Опубликовано
+                    </span>
+                    <span class="value">{{ published_blog_posts|default:"0" }}</span>
+                </li>
+                <li>
+                    <span class="label">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M12 8v4l3 3M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/>
+                        </svg>
+                        Черновики
+                    </span>
+                    <span class="value">{{ draft_blog_posts|default:"0" }}</span>
+                </li>
+                <li class="placeholder-item"></li>
+            </ul>
+            <div class="draft-button-wrapper">
+                <button class="draft-toggle-btn" onclick="toggleDropdown('draftPostsDropdown')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="7 10 12 15 17 10"/>
+                        <line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                    Черновики ({{ draft_posts_list|length }})
+                </button>
+                <div id="draftPostsDropdown" class="dropdown-content" style="display: none;">
+                    {% if draft_posts_list %}
+                        <ul class="listing">
+                            {% for post in draft_posts_list %}
+                                <li>
+                                    <a href="/admin/pages/{{ post.id }}/edit/">{{ post.title }}</a>
+                                    <span class="date-badge">{{ post.first_published_at|date:"d.m.Y"|default:"—" }}</span>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p style="padding: 16px; text-align: center; margin: 0; color: #94a3b8;">Нет черновиков</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- БЛОК 2: ПРОЕКТЫ -->
+        <div class="stat-card">
+            <div class="stat-card-header">
+                <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                    <line x1="12" y1="13" x2="12" y2="17"/>
+                    <line x1="9" y1="15" x2="15" y2="15"/>
+                </svg>
+                <h3>Проекты</h3>
+            </div>
+            <div class="stat-main">
+                <span class="stat-number">{{ total_projects|default:"0" }}</span>
+                <small>всего</small>
+            </div>
+            <ul class="stat-items">
+                <li>
+                    <span class="label">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 6L9 17l-5-5"/>
+                        </svg>
+                        Опубликовано
+                    </span>
+                    <span class="value">{{ published_projects|default:"0" }}</span>
+                </li>
+                <li>
+                    <span class="label">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <rect x="2" y="4" width="20" height="16" rx="2"/>
+                            <line x1="8" y1="10" x2="16" y2="10"/>
+                        </svg>
+                        Архив
+                    </span>
+                    <span class="value">{{ archive_projects|default:"0" }}</span>
+                </li>
+                <li>
+                    <span class="label">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M12 8v4l3 3M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/>
+                        </svg>
+                        Черновики
+                    </span>
+                    <span class="value">{{ draft_projects|default:"0" }}</span>
+                </li>
+            </ul>
+            <div class="draft-button-wrapper">
+                <button class="draft-toggle-btn" onclick="toggleDropdown('draftProjectsDropdown')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="7 10 12 15 17 10"/>
+                        <line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                    Черновики ({{ draft_projects_list|length }})
+                </button>
+                <div id="draftProjectsDropdown" class="dropdown-content" style="display: none;">
+                    {% if draft_projects_list %}
+                        <ul class="listing">
+                            {% for project in draft_projects_list %}
+                                <li>
+                                    <a href="/admin/pages/{{ project.id }}/edit/">{{ project.title }}</a>
+                                    <span class="date-badge">{{ project.first_published_at|date:"d.m.Y"|default:"—" }}</span>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p style="padding: 16px; text-align: center; margin: 0; color: #94a3b8;">Нет черновиков</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- БЫСТРЫЕ ДЕЙСТВИЯ -->
+    <div class="action-panel">
+            <h4 style="display: flex; align-items: center; gap: 8px; height: 1px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline-block; vertical-align: middle;">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+            </svg>
+            <span>Быстрые действия</span>
+        </h4>
+        <div class="actions-grid">
+            {% if yandex_metrika_id %}
+            <a href="https://metrika.yandex.ru/dashboard?id={{ yandex_metrika_id }}" class="action-btn" target="_blank">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M21 12a9 9 0 0 1-9 9m9-9a9 9 0 0 0-9-9m9 9H3m9 9a9 9 0 0 1-9-9m9 9c1.66 0 3-4 3-9s-1.34-9-3-9m0 18c-1.66 0-3-4-3-9s1.34-9 3-9"/>
+                </svg>
+                Метрика
+            </a>
+            {% endif %}
+            {% if blog_page_id %}
+            <a href="/admin/pages/add/home/portfolioblogpostpage/{{ blog_page_id }}/" class="action-btn action-btn-primary">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <line x1="12" y1="5" x2="12" y2="19"/>
+                    <line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
+                Новая статья
+            </a>
+            {% endif %}
+            <a href="/admin/pages/" class="action-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                    <line x1="8" y1="8" x2="16" y2="8"/>
+                    <line x1="8" y1="12" x2="16" y2="12"/>
+                    <line x1="8" y1="16" x2="12" y2="16"/>
+                </svg>
+                Все страницы
+            </a>
+            <a href="/admin/images/" class="action-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <rect x="2" y="2" width="20" height="20" rx="2.5"/>
+                    <circle cx="8.5" cy="8.5" r="2.5"/>
+                    <path d="M21 15l-5-4-3 3-4-4-6 6"/>
+                </svg>
+                Изображения
+            </a>
+            <a href="/admin/settings/home/socialmediasettings/" class="action-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                    <line x1="18" y1="6" x2="18" y2="6.01"/>
+                    <line x1="6" y1="6" x2="6" y2="6.01"/>
+                </svg>
+                Соцсети
+            </a>
+            <a href="/admin/settings/dashboard/analyticssettings/" class="action-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M21 12a9 9 0 0 1-9 9m9-9a9 9 0 0 0-9-9m9 9H3m9 9a9 9 0 0 1-9-9m9 9c1.66 0 3-4 3-9s-1.34-9-3-9m0 18c-1.66 0-3-4-3-9s1.34-9 3-9"/>
+                </svg>
+                Аналитика
+            </a>
+            <a href="/" class="action-btn" target="_blank">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M3 12h3l3-9 3 18 3-9h3"/>
+                </svg>
+                Открыть сайт
+            </a>
+        </div>
+    </div>
+
+    <!-- ГРАФИК -->
+    <div class="chart-panel">
+        <h4>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M18 20V10M12 20V4M6 20v-6"/>
+            </svg>
+            Динамика публикаций статей
+        </h4>
+        <canvas id="publicationsChart" width="400" height="200"></canvas>
+    </div>
+</div>
+
+<script>
+    function toggleDropdown(id) {
+        var dropdown = document.getElementById(id);
+        if (dropdown.style.display === 'none' || dropdown.style.display === '') {
+            dropdown.style.display = 'block';
+        } else {
+            dropdown.style.display = 'none';
+        }
+    }
+</script>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const chartData = {{ chart_data_json|safe }};
+        
+        const ctx = document.getElementById('publicationsChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: chartData.labels,
+                datasets: [{
+                    label: 'Опубликовано статей',
+                    data: chartData.values,
+                    borderColor: '#43b1b0',
+                    backgroundColor: 'rgba(67, 177, 176, 0.04)',
+                    borderWidth: 2.5,
+                    fill: true,
+                    tension: 0.3,
+                    pointBackgroundColor: '#43b1b0',
+                    pointBorderColor: '#ffffff',
+                    pointBorderWidth: 2,
+                    pointRadius: 5,
+                    pointHoverRadius: 7,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            usePointStyle: true,
+                            boxWidth: 8,
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: '#1a2a3a',
+                        padding: 10,
+                        cornerRadius: 8,
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: '#eef2f6',
+                            drawBorder: false,
+                        },
+                        ticks: {
+                            stepSize: 1,
+                            precision: 0,
+                            color: '#64748b',
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false,
+                        },
+                        ticks: {
+                            color: '#64748b',
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}

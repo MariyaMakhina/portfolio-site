@@ -1,0 +1,73 @@
+{% extends "base_photo.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+<div class="portfolio-page">
+    <div class="container">
+        <h1 class="page-title">{{ page.title }}</h1>
+
+        
+        {% if page.intro %}
+            <div class="page-intro">{{ page.intro|richtext }}</div>
+        {% endif %}
+
+        <!-- Фильтр по категориям -->
+        <div class="portfolio-filters">
+            <span>Категории:</span>
+            <a href="{% pageurl page %}" class="filter-link {% if not current_category %}active{% endif %}">Все</a>
+            <span class="separator">|</span>
+            <a href="{% pageurl page %}?category=1" class="filter-link {% if current_category == '1' %}active{% endif %}">Отели</a>
+            <span class="separator">|</span>
+            <a href="{% pageurl page %}?category=2" class="filter-link {% if current_category == '2' %}active{% endif %}">Фасады</a>
+            <span class="separator">|</span>
+            <a href="{% pageurl page %}?category=3" class="filter-link {% if current_category == '3' %}active{% endif %}">События</a>
+            <span class="separator">|</span>
+            <a href="{% pageurl page %}?category=4" class="filter-link {% if current_category == '4' %}active{% endif %}">Детали</a>
+        </div>
+
+        <!-- Сетка проектов -->
+        <div class="projects-grid">
+            {% for project in projects %}
+                <article class="project-card">
+                    <!-- ?from={{ request.get_full_path }} - запомнил путь текущий, чтобы на него вернуться -->
+                    <a href="{% pageurl project %}?from={{ request.get_full_path }}" class="project-link">
+                        {% if project.title_image %}
+                            {% image project.title_image fill-400x500 format-webp as card_img %}
+                            <div class="project-image" style="background-image: url('{{ card_img.url }}');">
+                                <div class="project-overlay">
+                                    <div class="overlay-content">
+                                        {% if project.short_description %}
+                                            <p class="project-short-desc">{{ project.short_description|truncatewords:15 }}</p>
+                                        {% endif %}
+                                    </div>
+                                    <div class="project-meta">
+                                        <span class="project-category">{{ project.get_category_name }}</span>
+                                        <p><span class="project-date">{{ project.date|date:"F Y"|capfirst }}</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="project-image placeholder">
+                                <div class="project-overlay">
+                                    <h3 class="project-title">{{ project.title }}</h3>
+                                    <div class="project-meta">
+                                        <span class="project-category">{{ project.get_category_name }}</span>
+                                        <span class="project-date">{{ project.date|date:"d.m.Y" }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </a>
+                </article>
+            {% empty %}
+                <p class="no-projects">Проектов пока нет.</p>
+            {% endfor %}
+        </div>
+
+        
+        
+        <!-- Пагинация -->
+        {% include "blog/paginator.html" %}        
+    </div>
+</div>
+{% endblock %}

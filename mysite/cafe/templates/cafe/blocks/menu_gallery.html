@@ -1,0 +1,71 @@
+{% load wagtailimages_tags wagtailcore_tags cafe_tags %}
+
+<div class="menu-gallery-block">
+    {% if value.title %}
+        <h3 class="menu-gallery-title">{{ value.title }}</h3>
+    {% endif %}
+    
+    <div class="menu-grid">
+        {% for category in value.categories %}
+            <div class="menu-category-card">
+                <!-- Фото категории -->
+                {% if category.image %}
+                    {% image category.image fill-250x150 format-webp as cat_img %}
+                    <div class="category-image">
+                        <img src="{{ cat_img.url }}" alt="{{ category.name }}" loading="lazy">
+                    </div>
+                {% endif %}
+                
+                <!-- Заголовок категории -->
+                <div class="category-header">
+                    <h4 class="category-name">{{ category.name }}</h4>
+                    {% if category.description %}
+                        <p class="category-description">{{ category.description }}</p>
+                    {% endif %}
+                </div>
+                
+                <!-- Таблица меню - проверяем есть ли volumes -->
+                {% if volumes %}
+                    <div class="menu-table-container">
+                        <table class="menu-table">
+                            <thead>
+                                <tr>
+                                    <th>Наименование</th>
+                                    {% for volume in volumes %}
+                                        <th>{{ volume.name }}</th>
+                                    {% endfor %}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in category.items.all %}
+                                    {% if item.is_active %}
+                                        <tr>
+                                            <td class="item-name">
+                                                {{ item.name }}
+                                                {% if item.description %}
+                                                    <br><small>{{ item.description }}</small>
+                                                {% endif %}
+                                            </td>
+                                            
+                                            {% for volume in volumes %}
+                                                <td class="item-price">
+                                                    {% with price=item.prices.all|get_price_for_volume:volume.id %}
+                                                        {% if price and price.is_active %}
+                                                            {{ price.price }} ₽
+                                                        {% else %}
+                                                            —
+                                                        {% endif %}
+                                                    {% endwith %}
+                                                </td>
+                                            {% endfor %}
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+</div>

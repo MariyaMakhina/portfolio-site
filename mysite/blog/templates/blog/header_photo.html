@@ -1,0 +1,88 @@
+{% load static wagtailcore_tags wagtailimages_tags %}
+
+<header>
+    <div class="header-left"></div>
+     <!-- Центр: соцсети (скрыты на проектах и постах) -->
+    <div class="header-center">
+        {% if page.content_type.model != 'blogprojectpage' and page.content_type.model != 'blogpage' %}
+        <div class="social-icons">
+            <ul>
+                <li><i class="icons ic-mail"></i></li>
+                <li><i class="icons ic-telegram"></i></li>
+                <li><i class="icons ic-vk"></i></li>
+                <li><i class="icons ic-phone"></i></li>
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Правая часть: бургер-меню -->
+    <div class="header-right">
+        <button class="burger-menu" id="burgerMenu" aria-label="Меню">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </div>
+
+    <nav class="desktop-nav">
+        {% if page.content_type.model != 'bloghomepage' %}
+        <a href="/photo_studio" {% if request.path == '/photo_studio/' or request.path == '/photo_studio' %}class="nav-active"{% endif %}>Главная</a>
+        {% endif %}
+        <a href="/photo_studio/portfolio_photo/" {% if request.path == '/photo_studio/portfolio_photo/' or '/photo_studio/portfolio_photo/' in request.path %}class="nav-active"{% endif %}>Портфолио</a>
+        <a href="/photo_studio/blog_photo/" {% if request.path == '/photo_studio/blog_photo/' or '/photo_studio/blog_photo/' in request.path %}class="nav-active"{% endif %}>Блог</a>
+        <a href="/photo_studio/about_photo/" {% if request.path == '/photo_studio/about_photo/' or '/photo_studio/about_photo/' in request.path %}class="nav-active"{% endif %}>О студии</a>
+        <a href="/photo_studio/contact_photo/" {% if request.path == '/photo_studio/contact_photo/' or '/photo_studio/contact_photo/' in request.path %}class="nav-active"{% endif %}>Контакты</a>
+    </nav>
+
+    <!-- Выезжающее меню (справа) -->
+    <nav id="mainMenu">
+        <div class="nav-header">
+            <span class="nav-logo">Меню</span>
+            <button class="close-menu" id="closeMenu">✕</button>
+        </div>
+        {% if page.content_type.model != 'bloghomepage' %}
+        <a href="/photo_studio">Главная</a>
+        {% endif %}
+        <a href="/photo_studio/portfolio_photo/">Портфолио</a>
+        <a href="/photo_studio/blog_photo/">Блог</a>
+        <a href="/photo_studio/about_photo/">О студии</a>
+        <a href="/photo_studio/contact_photo/">Контакты</a>
+    </nav>
+</header>
+
+<!-- Оверлей -->
+<div id="menuOverlay" class="menu-overlay"></div>
+
+<script>
+    const burger = document.getElementById('burgerMenu');
+    const menu = document.getElementById('mainMenu');
+    const closeBtn = document.getElementById('closeMenu');
+    const overlay = document.getElementById('menuOverlay');
+    
+    function openMenu() {
+        menu.classList.add('open');
+        overlay.classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+    
+    function closeMenu() {
+        menu.classList.remove('open');
+        overlay.classList.remove('open');
+        document.body.style.overflow = '';
+    }
+    
+    if (burger) burger.addEventListener('click', openMenu);
+    if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+    if (overlay) overlay.addEventListener('click', closeMenu);
+    
+    document.querySelectorAll('#mainMenu a').forEach(link => {
+        link.addEventListener('click', closeMenu);
+    });
+    
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && menu && menu.classList.contains('open')) {
+            closeMenu();
+        }
+    });
+</script>

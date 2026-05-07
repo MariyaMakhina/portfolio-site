@@ -1,0 +1,20 @@
+{% load wagtailcore_tags %}
+
+<section class="block-content" id="section-footer">
+    {% if settings.home.SocialMediaSettings.show_in_footer %}
+        <div class="footer_seti">
+            {% include "includes/social_icons.html" %}
+        </div>
+    {% endif %}
+    
+    <p>
+        Мария Махина <span>© 
+        {% now "Y" as current_year %}
+        {% if current_year == "2025" %}
+            {{ current_year }}
+        {% else %}
+            2025 - {{ current_year }}
+        {% endif %}
+        </span>
+    </p>
+</section>

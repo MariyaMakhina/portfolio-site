@@ -1,0 +1,47 @@
+{% load cafe_tags %}
+{% if social_settings %}
+    {% if social_settings.phone %}
+      <div class="item-contact">
+        <a href="tel:{{ social_settings.phone }}" class="phone_url"></a>
+        <span>{{ social_settings.phone|format_phone }}</span>
+      </div>
+    {% endif %}
+    {% if social_settings.github_url %}
+      <div class="item-contact">
+        <a href="{{ social_settings.github_url }}" class="github_url"></a>
+        <span>{{ social_settings.github_url }}</span>
+      </div>
+    {% endif %}
+    {% if social_settings.telegram_url %}
+      <div class="item-contact">
+        <a href="{{ social_settings.telegram_url }}" class="telegram_url"></a>
+        <span>{{ social_settings.telegram_url }}</span>
+      </div>  
+    {% endif %}
+    {% if social_settings.instagram_url %}
+      <div class="item-contact">
+        <a href="{{ social_settings.instagram_url }}" class="instagram_url"></a>
+        <span>{{ social_settings.instagram_url }}</span>
+      </div>
+    {% endif %}
+    {% if social_settings.vk_url %}
+      <div class="item-contact">
+        <a href="{{ social_settings.vk_url }}" class="vk_url"></a>
+        <span>{{ social_settings.vk_url }}</span>
+      </div>
+    {% endif %}
+    {% if social_settings.whatsapp %}
+      <div class="item-contact">
+        <a href="{{ social_settings.whatsapp }}" class="whatsapp_url"></a>
+        <span>{{ social_settings.whatsapp }}</span>
+      </div>
+    {% endif %}
+    {% if social_settings.mail %}
+      <div class="item-contact">
+        <a href="mailto:{{ social_settings.mail }}" class="mail_url"></a>
+        <span>{{ social_settings.mail }}</span>
+      </div>
+    {% endif %}
+
+{% endif %}
+    

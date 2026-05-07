@@ -1,0 +1,36 @@
+{% load wagtailcore_tags %}
+
+{% if settings.home.SocialMediaSettings %}
+    <!-- {% if settings.home.SocialMediaSettings.phone %}
+        <a href="tel:{{ settings.home.SocialMediaSettings.phone|cut:' '|cut:'-'|cut:'('|cut:')' }}" class="phone_url tooltip" target="_blank" data-tooltip="{{ settings.home.SocialMediaSettings.phone }}"></a>
+    {% endif %} -->
+    
+    {% if settings.home.SocialMediaSettings.linkedin_url %}
+        <a href="{{ settings.home.SocialMediaSettings.linkedin_url }}" class="linkedin_url" target="_blank"></a>
+    {% endif %}
+    
+    {% if settings.home.SocialMediaSettings.telegram_url %}
+        <a href="{{ settings.home.SocialMediaSettings.telegram_url }}" class="telegram_url" target="_blank"></a>
+    {% endif %}
+    
+    {% if settings.home.SocialMediaSettings.instagram_url %}
+        <a href="{{ settings.home.SocialMediaSettings.instagram_url }}" class="instagram_url" target="_blank"></a>
+    {% endif %}
+    
+    {% if settings.home.SocialMediaSettings.vk_url %}
+        <a href="{{ settings.home.SocialMediaSettings.vk_url }}" class="vk_url" target="_blank"></a>
+    {% endif %}
+    
+    {% if settings.home.SocialMediaSettings.whatsapp %}
+        <a href="https://wa.me/{{ settings.home.SocialMediaSettings.whatsapp|cut:' '|cut:'-'|cut:'('|cut:')' }}" class="whatsup_url" target="_blank"></a>
+    {% endif %}
+    
+    {% if settings.home.SocialMediaSettings.mail %}
+        <a href="mailto:{{ settings.home.SocialMediaSettings.mail }}" class="mail_url" target="_blank"></a>
+    {% endif %}
+
+    {% if settings.home.SocialMediaSettings.max_url %}
+        <a href="{{ settings.home.SocialMediaSettings.max_url }}" class="max_url" target="_blank" rel="noopener noreferrer"></a>
+    {% endif %}
+    
+{% endif %}

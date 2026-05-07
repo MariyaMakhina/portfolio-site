@@ -1,0 +1,39 @@
+{% if blogpages.paginator.num_pages > 1 %}
+    <div class="pagination">
+        <!-- Стрелка "назад" -->
+        <div class="but">
+            {% if blogpages.has_previous %}
+                <a href="?page={{ blogpages.previous_page_number }}" class="prev">
+                    ⇐
+                </a>
+            {% else %}
+                <a href="?page=1" class="prev disabled">
+                    ⇐
+                </a>
+            {% endif %}
+        </div>
+        
+        <!-- Номера страниц -->
+        {% for page_num in blogpages.paginator.page_range %}
+            <div class="but">
+                <a href="?page={{ page_num }}" 
+                   class="{% if page_num == blogpages.number %}current{% endif %}">
+                    {{ page_num }}
+                </a>
+            </div>
+        {% endfor %}
+        
+        <!-- Стрелка "вперёд" -->
+        <div class="but">
+            {% if blogpages.has_next %}
+                <a href="?page={{ blogpages.next_page_number }}" class="next">
+                    ⇒
+                </a>
+            {% else %}
+                <a href="?page={{ blogpages.paginator.num_pages }}" class="next disabled">
+                    ⇒
+                </a>
+            {% endif %}
+        </div>
+    </div>
+{% endif %}

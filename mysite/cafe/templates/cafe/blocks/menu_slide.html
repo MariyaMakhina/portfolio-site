@@ -1,0 +1,19 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+<div class="menu-slide-content">
+    <div class="row">
+        <div class="col-md-7">
+            {% include_block value.category %}
+        </div>
+        <div class="col-md-5">
+            {% if value.slide_image %}
+                {% image value.slide_image fill-500x400 webp as slide_img %}
+                <img src="{{ slide_img.url }}" alt="" class="slide-image" loading="lazy">
+            {% endif %}
+            {% if value.slide_text %}
+                <div class="slide-text">
+                    {{ value.slide_text|richtext }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>

@@ -1,0 +1,8 @@
+<div class="map-block">
+    {% if value.title %}
+        <h4>{{ value.title }}</h4>
+    {% endif %}
+    <div class="map-container">
+        {{ value.map_code|safe }}
+    </div>
+</div>

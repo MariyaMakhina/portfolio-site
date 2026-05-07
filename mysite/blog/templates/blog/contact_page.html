@@ -1,0 +1,134 @@
+{% extends "base_photo.html" %}
+{% load wagtailcore_tags static %}
+
+{% block content %}
+<div class="contact-page">
+    <div class="container">
+        
+        <!-- Заголовок -->
+        <h1 class="page-title">{{ page.title }}</h1>
+        
+        <!-- Короткое описание -->
+        {% if page.intro %}
+            <div class="contact-intro simple-text">
+                {{ page.intro|richtext }}
+            </div>
+        {% endif %}
+        
+        <!-- Блок: контакты + карта -->
+        <div class="contact-info-row simple-text">
+
+                  <!-- Левая колонка: карта -->
+            <div class="contact-map simple-text">
+                <h3>Как нас найти</h3>
+                <p class="map-address">{{ page.address }}</p>
+                <div class="map-container">
+                    {# Безопасно выводим iframe-код, который мы вставили в админке #}
+                    {{ page.map_iframe|safe }}
+                </div>
+            </div>
+            <!-- Правая колонка: контакты -->
+            <div class="contact-details">
+                <h3>{{ page.name_and_inn }}</h3>
+                <ul class="contact-list">
+                    <li>
+                        <i class="icons ic-phone"> </i>
+                        <span>+7 921 11 11 11</span>
+                    </li>
+                    <li>
+                        <i class="icons ic-mail"></i><span>info@northlight.ru</span>
+                    </li>
+                    <li>
+                        <i class="icons ic-telegram"></i>
+                        <span>t.me/north_light</span>
+                    </li>
+                    <li>
+                        <i class="icons ic-vk"></i>
+                        <span>vk.com/north_light</span>
+                    </li>
+                </ul>
+
+                <!-- Форма обратной связи -->
+                <div class="contact-form-section">
+                    <h3>Запись на съёмку</h3>
+                    <form id="feedbackForm" class="feedback-form simple-text">
+                        <div class="fields_row">
+                            <div class="form-group">
+                                <label for="name">Имя *</label>
+                                <input type="text" id="name" name="name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="contact">Телефон / Telegram *</label>
+                                <input type="text" id="contact" name="contact" required >
+                            </div>
+                                                <!-- Тип съёмки -->
+                            <div class="form-group">
+                                <label for="shooting_type">Тип съёмки *</label>
+                                <select id="shooting_type" name="shooting_type" required>
+                                    <option value="" disabled selected>— Выберите тип —</option>
+                                    <option value="portrait">Портрет</option>
+                                    <option value="subject">Предметная съёмка</option>
+                                    <option value="wedding">Свадьба</option>
+                                    <option value="hotel">Отель / Ресторан</option>
+                                    <option value="event">Событие / Мероприятие</option>
+                                    <option value="other">Другое</option>
+                                </select>
+                            </div>
+
+                            <!-- Удобная дата -->
+                            <div class="form-group">
+                                <label for="date">Удобная дата *</label>
+                                <input type="date" id="date" name="date" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Сообщение</label>
+                            <textarea id="message" name="message" rows="3"></textarea>
+                        </div>
+                        <button type="submit" class="submit-btn">Отправить</button>
+                    </form>
+                </div>
+
+            </div>
+            
+      
+        </div>
+    
+    </div>
+</div>
+<!-- Модальное окно (диалог) -->
+<div id="successModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <span class="modal-close">&times;</span>
+        <h3>Спасибо!</h3>
+        <p>Ваше сообщение отправлено. Мы свяжемся с вами в ближайшее время.</p>
+    </div>
+</div>
+
+<script>
+    // === Форма (модальное окно) ===
+    (function() {
+        const form = document.getElementById('feedbackForm');
+        const modal = document.getElementById('successModal');
+        const closeBtn = document.querySelector('.modal-close');
+        
+        if (form && modal && closeBtn) {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                form.reset();
+                modal.style.display = 'flex';
+            });
+            
+            closeBtn.addEventListener('click', function() {
+                modal.style.display = 'none';
+            });
+            
+            window.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        }
+    })();
+</script>
+{% endblock %}

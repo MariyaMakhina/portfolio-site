@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+<div class="blog-post-page">
+    {% include "includes/button_back.html" with show_home_button=True show_back_button=True %}
+        <header class="has-navigation">
+            {% if settings.home.SocialMediaSettings.show_in_header %}
+                {% include "includes/social_icons.html" %}
+            {% endif %}
+        </header>
+    <div class="container-article">      
+
+        <!-- Хлебные крошки
+        <div class="blog-breadcrumbs">
+            <a href="/">Главная</a>
+            <span class="separator">/</span>
+            <a href="{{ page.get_parent.url }}">Блог</a>
+            <span class="separator">/</span>
+            <span class="current">{{ page.title }}</span>
+        </div> -->
+        
+        <!-- Заголовок статьи -->
+        <div class="article-title">
+            <h1>{{ page.title }}</h1>
+        </div>
+        
+        <!-- Мета информация -->
+        <div class="blog-post-meta">
+            <span class="blog-post-date">
+                {{ page.date|date:"d.m.Y" }}
+            </span>
+            <span class="blog-post-reading">
+                📖 {% with words=page.body|striptags|wordcount %}
+                    {% if words < 200 %}
+                        1 минута чтения
+                    {% else %}
+                        {{ words|divisibleby:200|add:1 }} минут чтения
+                    {% endif %}
+                {% endwith %}
+            </span>
+        </div>
+        
+        <!-- {% if page.intro %}
+            <div class="blog-post-intro">
+                {{ page.intro }}
+            </div>
+        {% endif %} -->
+        
+        <!-- Изображение статьи -->
+        {% if page.image %}
+            {% image page.image original format-webp as article_img %}
+            <div class="blog-post-featured-image">
+                <img src="{{ article_img.url }}" alt="{{ page.title }}">
+            </div>
+        {% endif %}
+        
+        <!-- Содержание статьи -->
+        <div class="blog-post-content">
+            {{ page.body|richtext }}
+        </div>
+        
+    </div>
+        
+    <!-- Кнопка назад -->
+    <div class="buttn-back">
+        {% include "includes/button_back.html" with show_blog_button=True %}
+    </div>
+
+
+</div>
+{% include "blocks/button_up_block.html" %}
+{% endblock %}

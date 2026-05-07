@@ -1,0 +1,8 @@
+{% load wagtailcore_tags %}
+
+<div class="skill-item">
+    <div class="skill-name">{{ self.name }}</div>
+    <div class="skill-bar">
+        <div class="skill-level" style="width: {{ self.level }}%;"></div>
+    </div>
+</div>

@@ -1,0 +1,118 @@
+{% load wagtailcore_tags %}
+
+<!-- ФОРМА -->
+{% if form and form.visible_fields %}
+<section class="contact-section" id="contact-form">
+    
+    {% if page.form_intro %}
+        <div class="form-intro font_08">{{ page.form_intro|richtext }}</div>
+    {% endif %}
+    
+    <form action="{% pageurl page %}" method="POST" class="contact-form" id="contactForm">
+        {% csrf_token %}
+        
+      <div class="form_fields">
+          <div class="form-group_left">
+            {% for field in form.visible_fields|slice:":2" %}
+              <div class="form_item">
+                  <label class="font_08" for="{{ field.id_for_label }}">
+                      {{ field.label }}
+                      {% if field.field.required %}<span class="required">*</span>{% endif %}
+                  </label>
+                  {{ field }}
+              </div>
+            {% endfor %}
+          </div>
+
+          <div class="form-group_right">
+            {% for field in form.visible_fields|slice:"2:3" %}
+              <div class="form_item">
+                  <label class="font_08" for="{{ field.id_for_label }}">
+                      {{ field.label }}
+                      {% if field.field.required %}<span class="required">*</span>{% endif %}
+                  </label>
+                  {{ field }}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+        
+        <button type="submit" class="submit-button" id="submitBtn">
+            Отправить письмо
+        </button>
+    </form>
+    
+    {% if page.thank_you_text %}
+        <div class="success-message" id="successMessage" style="display: none;">
+            {{ page.thank_you_text|richtext }}
+        </div>
+    {% endif %}
+</section>
+
+<!-- JAVASCRIPT ТОЛЬКО ДЛЯ ЭТОЙ ФОРМЫ -->
+<script>
+
+(function() {
+    const contactForm = document.getElementById('contactForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const successMessage = document.getElementById('successMessage');
+    
+    if (!contactForm || !submitBtn) return;
+    
+    contactForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        // Простая валидация
+        const requiredFields = contactForm.querySelectorAll('[required]');
+        let isValid = true;
+        
+        requiredFields.forEach(field => {
+            if (!field.value.trim()) {
+                isValid = false;
+                field.style.borderColor = 'red';
+            }
+        });
+        
+        if (!isValid) {
+            alert('Заполните обязательные поля');
+            return;
+        }
+        
+        // Отправка
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Отправка...';
+        
+        try {
+            const response = await fetch(this.action, {
+                method: 'POST',
+                body: new FormData(this)
+            });
+            
+            if (response.ok) {
+                // Успех
+                contactForm.style.display = 'none';
+                if (successMessage) {
+                    successMessage.style.display = 'block';
+                }
+                
+                setTimeout(() => {
+                    contactForm.style.display = 'block';
+                    contactForm.reset();
+                    if (successMessage) successMessage.style.display = 'none';
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Отправить сообщение';
+                }, 5000);
+            } else {
+                alert('Ошибка отправки');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Отправить сообщение';
+            }
+        } catch {
+            alert('Ошибка сети');
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Отправить сообщение';
+        }
+    });
+})();
+</script>
+{% endif %}

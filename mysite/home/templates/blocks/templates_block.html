@@ -1,0 +1,37 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{# ЗАГОЛОВОК БЛОКА (до section) #}
+{% if value.title %}
+<div class="razdel">
+    <div class="line-razdel"></div>
+    <h1>{{ value.title }}</h1>
+    <div class="line-razdel"></div>
+</div>
+{% endif %}
+
+<section id="section-templates">
+    <div class="block-content">
+        {% for template in value.templates %}
+            <div class="boxs template-card">
+                {% if template.link_page or template.external_link %}
+                    <a href="{% if template.link_page %}{{ template.link_page.url }}{% else %}{{ template.external_link }}{% endif %}" class="link-block" target="_blank" rel="noopener noreferrer">
+                {% endif %}
+                <div class="box">
+                    <div class="imag-temp">
+                        {% if template.image %}
+                            {% image template.image fill-350x250 as template_img %}
+                            <img src="{{ template_img.url }}" alt="{{ template.title }}">
+                        {% endif %}
+                    </div>
+                    <div class="description">
+                        <h3>{{ template.title }}</h3>
+                        <div class="template-description">{{ template.description|richtext }}</div>
+                    </div>
+                </div>
+                {% if template.link_page or template.external_link %}
+                    </a>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+</section>
