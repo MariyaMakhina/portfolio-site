@@ -22,6 +22,8 @@ BASE_DIR = PROJECT_DIR.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 ALLOWED_HOSTS = [
+    'mariyamakhina.ru',
+    'www.mariyamakhina.ru',
     'localhost',
     '127.0.0.1:8000',
     '127.0.0.1',
@@ -59,6 +61,7 @@ INSTALLED_APPS = [
     "blog",
     'dashboard',
     "wagtailmedia",
+    'wagtail.contrib.sitemaps',  # для карты сайта
 ]
 
 # Для нормального отображения кириллицы в URL
@@ -81,11 +84,9 @@ ROOT_URLCONF = "mysite.urls"
 
 TEMPLATES = [
     {
-        "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [
-            PROJECT_DIR / "templates",
-        ],
-        "APP_DIRS": True,
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],  
+        'APP_DIRS': True,
         "OPTIONS": {
             "context_processors": [
                 "django.template.context_processors.debug",

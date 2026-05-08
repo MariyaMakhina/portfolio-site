@@ -1,0 +1,23 @@
+.w-panel__content {
+  margin-top: 2em;
+}
+.w-field__label {
+  margin-bottom: 2em;
+}
+.w-panel__wrapper {
+  h3{
+    display: block;
+    border-top: 2px dashed #666;
+    font-size: 0.9rem;
+    padding: 2rem;
+    text-decoration: underline;
+  }
+}
+.w-field-row {
+  grid-auto-flow: row;
+}
+.w-panel--nested{
+  h3{
+    display: none;
+  }
+}

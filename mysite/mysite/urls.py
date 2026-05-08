@@ -9,6 +9,19 @@ from wagtail.documents import urls as wagtaildocs_urls
 from search import views as search_views
 
 from django.views.generic.base import RedirectView
+from django.views.generic import TemplateView
+from wagtail.contrib.sitemaps.views import sitemap
+
+from wagtail.models import Page
+
+def sitemap_view(request):
+    pages = Page.objects.live().public()
+    return TemplateView.as_view(
+        template_name='sitemap.xml',
+        extra_context={'pages': pages, 'request': request},
+        content_type='application/xml'
+    )(request)
+
 
 
 urlpatterns = [
@@ -18,6 +31,9 @@ urlpatterns = [
     path("documents/", include(wagtaildocs_urls)),
     path("search/", search_views.search, name="search"),
     path('favicon.ico', RedirectView.as_view(url='/static/favicon.png', permanent=True)),
+    path('robots.txt', TemplateView.as_view(template_name='robots.txt', content_type='text/plain')),
+    # path('sitemap.xml', sitemap),
+    path('sitemap.xml', sitemap_view),
 ]
 
 

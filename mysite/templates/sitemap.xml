@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+{% for page in pages %}
+    {% if page.url and page.url != '/' and page.url != 'None' %}
+    <url>
+        <loc>{{ request.site.root_url }}{{ page.url }}</loc>
+        <lastmod>{{ page.latest_revision_created_at|date:"Y-m-d" }}</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
+    </url>
+    {% endif %}
+{% endfor %}
+</urlset>
