@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags %}
+
+{% block content %}
+<div class="search-page">
+    <div class="container">
+        <h1>{{ page.title }}</h1>
+        
+        {% if page.intro %}
+            <div class="search-intro">{{ page.intro|richtext }}</div>
+        {% endif %}
+        
+        <form action="" method="get" class="search-form">
+            <input type="text" name="query" 
+                   placeholder="Поиск по проектам и статьям..." 
+                   value="{{ query }}">
+            <button type="submit">Найти</button>
+        </form>
+        
+        {% if query %}
+            <div class="search-results">
+                <h2>Результаты поиска: "{{ query }}"</h2>
+                
+                {% if results %}
+                    <ul class="search-list">
+                    {% for result in results %}
+                        <li class="search-item">
+                            <a href="{% pageurl result %}" class="search-link">
+                                <h3>{{ result.title }}</h3>
+                                {% if result.specific.intro %}
+                                    <p>{{ result.specific.intro|truncatewords:20 }}</p>
+                                {% endif %}
+                                <span class="search-type">
+                                    {% if result.content_type.model == 'projectpage' %}
+                                        🚀 Проект
+                                    {% elif result.content_type.model == 'portfolioblogpostpage' %}
+                                        📝 Статья
+                                    {% else %}
+                                        📄 Страница
+                                    {% endif %}
+                                </span>
+                            </a>
+                        </li>
+                    {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>Ничего не найдено. Попробуйте изменить запрос.</p>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

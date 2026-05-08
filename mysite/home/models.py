@@ -52,6 +52,13 @@ class PortfolioBlogPostPage(Page):
     body = RichTextField(blank=True)
     image = models.ForeignKey('wagtailimages.Image', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     
+    search_fields = Page.search_fields + [
+        index.SearchField('title', partial_match=True, boost=10),
+        index.SearchField('intro', partial_match=True, boost=5),
+        index.SearchField('body', partial_match=True),
+        index.FilterField('slug'), 
+    ]
+    
     content_panels = Page.content_panels + [
         MultiFieldPanel([FieldPanel('date'), FieldPanel('intro'), FieldPanel('image')], heading="Информация о статье"),
         FieldPanel('body'),
@@ -322,6 +329,13 @@ class ProjectPage(Page):
     link_page = models.ForeignKey('wagtailcore.Page', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     external_link = models.URLField(blank=True, verbose_name="Внешняя ссылка")
     
+    search_fields = Page.search_fields + [
+        index.SearchField('title', partial_match=True, boost=10),
+        index.SearchField('intro', partial_match=True, boost=5),
+        index.SearchField('technologies', partial_match=True),
+        index.FilterField('slug'), 
+    ]
+    
     content_panels = Page.content_panels + [
         MultiFieldPanel([FieldPanel('intro'), FieldPanel('image'), MediaChooserPanel('video', media_type='video')], heading="Основная информация"),
         MultiFieldPanel([FieldPanel('technologies'), FieldPanel('completion_date')], heading="Детали"),
@@ -329,6 +343,10 @@ class ProjectPage(Page):
         MultiFieldPanel([FieldPanel('link_page'), FieldPanel('external_link')], heading="Ссылка"),
         FieldPanel('content'),
     ]
+    
+    def is_publicly_accessible(self):
+        """Определяет, видна ли страница в публичном поиске"""
+        return self.is_published and self.live
     
     def get_link_url(self):
         if self.link_page:
@@ -338,3 +356,37 @@ class ProjectPage(Page):
     class Meta:
         verbose_name = "Проект"
         verbose_name_plural = "Проекты"
+        
+class SearchPage(Page):
+    """Страница поиска по сайту"""
+    intro = RichTextField(blank=True, help_text="Текст над формой поиска")
+    
+    content_panels = Page.content_panels + [
+        FieldPanel('intro'),
+    ]
+    
+    def get_template(self, request):
+        return 'search/search_page.html'  # путь к шаблону
+    
+    def get_context(self, request):
+        context = super().get_context(request)
+        query = request.GET.get('query', '')
+        results = []
+        
+        if query:
+            from home.models import ProjectPage, PortfolioBlogPostPage  # ← твои модели
+            
+            # Ищем только проекты и твои статьи
+            project_results = ProjectPage.objects.live().public().search(query)
+            blog_results = PortfolioBlogPostPage.objects.live().public().search(query)
+            
+            # Объединяем
+            results = list(project_results) + list(blog_results)
+        
+        context['query'] = query
+        context['results'] = results
+        return context
+    
+    class Meta:
+        verbose_name = "Страница поиска веб-портфолио"
+        verbose_name_plural = "Страницы поиска веб-портфолио"
