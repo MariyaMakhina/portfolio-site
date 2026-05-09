@@ -64,6 +64,12 @@ class PortfolioBlogPostPage(Page):
         FieldPanel('body'),
     ]
     
+    def get_context(self, request):
+        context = super().get_context(request)
+        blog_page = PortfolioBlogIndexPage.objects.live().first()
+        context['blog_page_url'] = blog_page.url if blog_page else '/blog/'
+        return context
+    
     class Meta:
         verbose_name = "Статья блога портфолио"
         verbose_name_plural = "Статьи блога портфолио"
@@ -116,6 +122,9 @@ class HomePage(Page):
         # Для блога (нужно для blog_section_block)
         latest_posts = PortfolioBlogPostPage.objects.live().public().order_by('-date')[:3]
         context['latest_posts'] = latest_posts
+        
+        blog_page = PortfolioBlogIndexPage.objects.live().first()
+        context['blog_page_url'] = blog_page.url if blog_page else '/blog/'
         
         return context
     
@@ -304,6 +313,41 @@ class ProjectRequest(models.Model):
         verbose_name = "Заявка на проект"
         verbose_name_plural = "Заявки на проекты"
 
+# ============== Список проектов =================
+
+class ProjectsListPage(Page):
+    intro = RichTextField(blank=True, help_text="Краткое вступление")
+    posts_per_page = models.IntegerField(default=6, verbose_name="Проектов на страницу")
+    
+    content_panels = Page.content_panels + [
+        FieldPanel('intro'),
+        FieldPanel('posts_per_page'),
+    ]
+    
+    def get_context(self, request):
+        context = super().get_context(request)
+        
+        if request.user.is_authenticated and request.user.is_superuser:
+            # Администратор видит все проекты
+            all_projects = ProjectPage.objects.all().order_by('-completion_date', '-pk')
+        else:
+            # Обычные пользователи видят НИЧЕГО (только администратор видит проекты)
+            all_projects = ProjectPage.objects.none()
+        
+        paginator = Paginator(all_projects, self.posts_per_page)
+        page = request.GET.get('page')
+        
+        try:
+            projects = paginator.page(page)
+        except (PageNotAnInteger, EmptyPage):
+            projects = paginator.page(1)
+        
+        context['projects'] = projects
+        return context
+    
+    class Meta:
+        verbose_name = "Страница проектов веб-портфолио"
+        verbose_name_plural = "Страницы проектов веб-портфолио"
 
 # ============ Проект (страница) ============
 class ProjectContentBlock(blocks.StructBlock):
@@ -324,8 +368,6 @@ class ProjectPage(Page):
     video = models.ForeignKey('wagtailmedia.Media', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', limit_choices_to={'type': 'video'})
     technologies = models.CharField(max_length=500, blank=True, verbose_name="Технологии")
     completion_date = models.DateField(null=True, blank=True, verbose_name="Дата завершения")
-    is_published = models.BooleanField(default=False, verbose_name="Опубликовано")
-    is_archive = models.BooleanField(default=False, verbose_name="Архив")
     link_page = models.ForeignKey('wagtailcore.Page', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     external_link = models.URLField(blank=True, verbose_name="Внешняя ссылка")
     
@@ -336,17 +378,19 @@ class ProjectPage(Page):
         index.FilterField('slug'), 
     ]
     
+    is_ready = models.BooleanField(
+        default=False,
+        verbose_name="Проект готов",
+        help_text="Отметьте, если проект полностью готов к показу"
+    )
+    
     content_panels = Page.content_panels + [
         MultiFieldPanel([FieldPanel('intro'), FieldPanel('image'), MediaChooserPanel('video', media_type='video')], heading="Основная информация"),
         MultiFieldPanel([FieldPanel('technologies'), FieldPanel('completion_date')], heading="Детали"),
-        MultiFieldPanel([FieldPanel('is_published'), FieldPanel('is_archive')], heading="Статус"),
+        MultiFieldPanel([FieldPanel('is_ready')], heading="Статус проекта"),
         MultiFieldPanel([FieldPanel('link_page'), FieldPanel('external_link')], heading="Ссылка"),
         FieldPanel('content'),
     ]
-    
-    def is_publicly_accessible(self):
-        """Определяет, видна ли страница в публичном поиске"""
-        return self.is_published and self.live
     
     def get_link_url(self):
         if self.link_page:
@@ -357,6 +401,8 @@ class ProjectPage(Page):
         verbose_name = "Проект"
         verbose_name_plural = "Проекты"
         
+        
+# ============= Поиск ============
 class SearchPage(Page):
     """Страница поиска по сайту"""
     intro = RichTextField(blank=True, help_text="Текст над формой поиска")
@@ -374,17 +420,32 @@ class SearchPage(Page):
         results = []
         
         if query:
-            from home.models import ProjectPage, PortfolioBlogPostPage  # ← твои модели
+            from home.models import PortfolioBlogPostPage
             
-            # Ищем только проекты и твои статьи
-            project_results = ProjectPage.objects.live().public().search(query)
-            blog_results = PortfolioBlogPostPage.objects.live().public().search(query)
-            
-            # Объединяем
-            results = list(project_results) + list(blog_results)
+            if request.user.is_authenticated and request.user.is_superuser:
+                from home.models import ProjectPage
+                projects = ProjectPage.objects.all().search(query)
+                articles = PortfolioBlogPostPage.objects.live().public().search(query)
+                results = list(projects) + list(articles)
+            else:
+                # Обычный пользователь видит только статьи блога
+                results = PortfolioBlogPostPage.objects.live().public().search(query)
+        
+        # Пагинация
+        paginator = Paginator(results, 10)
+        page_number = request.GET.get('page')
+        
+        try:
+            page_results = paginator.page(page_number)
+        except (PageNotAnInteger, EmptyPage):
+            page_results = paginator.page(1)
         
         context['query'] = query
-        context['results'] = results
+        context['results'] = page_results
+        
+        blog_page = PortfolioBlogIndexPage.objects.live().first()
+        context['blog_page_url'] = blog_page.url if blog_page else '/'
+        
         return context
     
     class Meta:

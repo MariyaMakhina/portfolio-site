@@ -9,7 +9,7 @@
     {% endif %}
     
     {% if show_blog_button %}
-        <a href="{{ page.get_parent.url }}?page={{ request.GET.from_page|default:1 }}" class="nav-btn nav-btn--blog">
+        <a href="{{ blog_page_url }}" class="nav-btn nav-btn--blog">
             <span class="nav-btn__icon">&lang;</span>
             <span class="nav-btn__text">Ко всем статьям</span>
         </a>
@@ -19,6 +19,13 @@
         <a href="javascript:history.back()" class="nav-btn nav-btn--back">
             <span class="nav-btn__icon">&lang;</span>
             <span class="nav-btn__text">Назад</span>
+        </a>
+    {% endif %}
+    <!-- Кнопка на страницу проектов (только для администратора) -->
+    {% if show_projects_button and request.user.is_authenticated and request.user.is_superuser %}
+        <a href="/projects/" class="nav-btn nav-btn--projects">
+            <span class="nav-btn__icon">&lang;</span>
+            <span class="nav-btn__text">Проекты</span>
         </a>
     {% endif %}
 </div>

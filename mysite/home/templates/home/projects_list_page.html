@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+<div class="blog-page">
+    <div class="container">
+        {% include "includes/button_back.html" with show_home_button=True %}
+        
+        <header class="has-navigation">
+            {% if settings.home.SocialMediaSettings.show_in_header %}
+                {% include "includes/social_icons.html" %}
+            {% endif %}
+        </header>
+
+         <div class="box-search">
+            <form action="/portfolio_search/" method="get" class="search-form">
+                <input type="text" name="query" 
+                    placeholder="Поиск по статьям..." 
+                    value="{{ request.GET.query }}" 
+                    class="search-input">
+                <button type="submit" class="search-button">
+                    
+                </button>
+            </form>
+        </div>
+
+        <!-- Заголовок -->
+        <div class="projects-title">
+            <h1>{{ page.title }}</h1>
+        </div>
+        
+        {% if page.intro %}
+            <div class="projects-intro">
+                {{ page.intro|richtext }}
+            </div>
+        {% endif %}
+        
+        <!-- Список проектов (как карточки блога) -->
+        {% if projects %}
+            <div class="blog-all-posts">
+                {% for project in projects %}
+                    <article class="blog-post-full">
+                        <h2 class="blog-post-title">
+                            <a href="{% pageurl project %}">{{ project.title }}</a>
+                        </h2>
+                         <!-- Статус проекта -->
+                        <div class="project-status">
+                                <!-- Статус готовности -->
+                          {% if project.specific.is_ready %}
+                              <span class="status status-ready">✅ Готов</span>
+                          {% else %}
+                              <span class="status status-not-ready">🔄 В работе</span>
+                          {% endif %}
+                          
+                          <!-- Статус публикации -->
+                          {% if not project.live %}
+                              <span class="status status-draft">📝 Черновик</span>
+                          {% elif project.specific.show_on_main %}
+                              <span class="status status-on-main">⭐ На главной</span>
+                          {% else %}
+                              <span class="status status-published">✅ Опубликован</span>
+                          {% endif %}
+                      </div>
+                        <div class="block-img-descr">
+                            <div class="blog-post-image">
+                                {% if project.image %}
+                                    {% image project.image original format-webp as project_img %}
+                                    <img src="{{ project_img.url }}" alt="{{ project.title }}">
+                                {% endif %}
+                            </div>
+                            
+                            <div class="blog-post-details">
+                                {% if project.intro %}
+                                    <p class="blog-post-description">{{ project.intro|truncatewords:40 }}</p>
+                                {% else %}
+                                    <p class="blog-post-description">{{ project.content|striptags|truncatewords:40 }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="block-date-link">
+                            <div class="blog-post-date">
+                                {% if project.completion_date %}
+                                    {{ project.completion_date|date:"d.m.Y" }}
+                                {% endif %}
+                            </div>
+                            <a href="{% pageurl project %}" class="blog-post-readmore">
+                                Подробнее &nbsp;&nbsp; &rang;
+                            </a>
+                        </div>
+                    </article>
+                {% endfor %}
+            </div>
+
+            <!-- Пагинация -->
+            {% if projects.paginator.num_pages > 1 %}
+                <div class="pagination">
+                    {% if projects.has_previous %}
+                        <a href="?page={{ projects.previous_page_number }}" class="pagination__prev">←</a>
+                    {% else %}
+                        <span class="pagination__prev disabled">←</span>
+                    {% endif %}
+                    
+                    <div class="pagination__numbers">
+                        {% for num in projects.paginator.page_range %}
+                            {% if num == projects.number %}
+                                <span class="pagination__number active">{{ num }}</span>
+                            {% elif num > projects.number|add:-3 and num < projects.number|add:3 %}
+                                <a href="?page={{ num }}" class="pagination__number">{{ num }}</a>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    
+                    {% if projects.has_next %}
+                        <a href="?page={{ projects.next_page_number }}" class="pagination__next">→</a>
+                    {% else %}
+                        <span class="pagination__next disabled">→</span>
+                    {% endif %}
+                </div>
+            {% endif %}
+
+        {% else %}
+            <div class="projects-empty">
+                <p>Проекты пока не добавлены.</p>
+                <p>Загляните позже — здесь скоро появятся новые работы!</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+{% include "blocks/button_up_block.html" %}
+{% endblock %}

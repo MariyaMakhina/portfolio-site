@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.contrib.admin.views.decorators import staff_member_required
-from home.models import PortfolioBlogPostPage, PortfolioBlogIndexPage, ProjectPage
+from home.models import PortfolioBlogPostPage, PortfolioBlogIndexPage, ProjectPage, ProjectsListPage
 from django.utils import timezone
 from datetime import timedelta
 import json
@@ -23,26 +23,35 @@ def dashboard_view(request):
     except:
         pass
     
-    # Статистика проектов
+    # === СТАТИСТИКА ПРОЕКТОВ ===
     all_projects = ProjectPage.objects.all()
     total_projects = all_projects.count()
-    published_projects = all_projects.filter(is_published=True, is_archive=False).count()
-    archive_projects = all_projects.filter(is_archive=True).count()
-    draft_projects = all_projects.filter(is_published=False).count()
     
-    # Черновики проектов (для выпадающего списка)
-    draft_projects_list = all_projects.filter(is_published=False).order_by('-first_published_at')
+    # Опубликованные (live=True)
+    published_projects = all_projects.filter(live=True).count()
     
-    # Статистика статей
+    # В работе (live=True, но не готовы)
+    in_work_projects = all_projects.filter(live=True, is_ready=False).count()
+    
+    # Черновики (не опубликованы)
+    draft_projects = all_projects.filter(live=False).count()
+    
+    # Список проектов в работе (для выпадающего списка)
+    in_work_projects_list = all_projects.filter(live=True, is_ready=False).order_by('-first_published_at')
+    
+    # Список черновиков
+    draft_projects_list = all_projects.filter(live=False).order_by('-first_published_at')
+    
+    # === СТАТИСТИКА СТАТЕЙ ===
     all_posts = PortfolioBlogPostPage.objects.all()
     total_blog_posts = all_posts.count()
     published_blog_posts = all_posts.filter(live=True).count()
     draft_blog_posts = total_blog_posts - published_blog_posts
     
-    # Черновики статей (для выпадающего списка)
+    # Черновики статей
     draft_posts_list = all_posts.filter(live=False).order_by('-first_published_at')
     
-    # График
+    # === ГРАФИК ===
     today = timezone.now().date()
     publications = []
     labels = []
@@ -64,6 +73,11 @@ def dashboard_view(request):
         'values': publications,
     }
     
+    # === РОДИТЕЛЬСКАЯ СТРАНИЦА ДЛЯ ПРОЕКТОВ ===
+    projects_parent = ProjectsListPage.objects.first()
+    projects_parent_id = projects_parent.id if projects_parent else None
+    
+    # === СОЗДАЁМ КОНТЕКСТ ===
     context = {
         'total_blog_posts': total_blog_posts,
         'published_blog_posts': published_blog_posts,
@@ -71,10 +85,12 @@ def dashboard_view(request):
         'draft_posts_list': draft_posts_list,
         'total_projects': total_projects,
         'published_projects': published_projects,
-        'archive_projects': archive_projects,
+        'in_work_projects': in_work_projects,
         'draft_projects': draft_projects,
+        'in_work_projects_list': in_work_projects_list,
         'draft_projects_list': draft_projects_list,
         'blog_page_id': blog_page_id,
+        'projects_parent_id': projects_parent_id,
         'yandex_metrika_id': yandex_metrika_id,
         'chart_data_json': json.dumps(chart_data),
     }

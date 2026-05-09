@@ -10,7 +10,19 @@
                 {% include "includes/social_icons.html" %}
             {% endif %}
         </header>
-        <a href="/portfolio_search/">🔍 Поиск</a>
+        <div class="box-search">
+            <form action="/portfolio_search/" method="get" class="search-form">
+                <input type="text" name="query" 
+                    placeholder="Поиск по статьям..." 
+                    value="{{ request.GET.query }}" 
+                    class="search-input">
+                <button type="submit" class="search-button">
+                    
+                </button>
+            </form>
+        </div>
+
+
         <!-- Заголовок страницы -->
         <div class="blog-title">
             <h1>{{ page.title }}</h1>

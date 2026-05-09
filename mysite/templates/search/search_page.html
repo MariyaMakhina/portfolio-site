@@ -1,54 +1,127 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags %}
+{% load wagtailcore_tags wagtailimages_tags %}
 
 {% block content %}
-<div class="search-page">
+<div class="blog-page">
     <div class="container">
-        <h1>{{ page.title }}</h1>
+        {% include "includes/button_back.html" with show_home_button=True show_blog_button=True show_projects_button=True %}
+    
+        <header class="has-navigation">
+            {% if settings.home.SocialMediaSettings.show_in_header %}
+                {% include "includes/social_icons.html" %}
+            {% endif %}
+        </header>
+        <div class="title-search">
+            <h1>{{ page.title }}</h1>
         
-        {% if page.intro %}
-            <div class="search-intro">{{ page.intro|richtext }}</div>
-        {% endif %}
+
+            {% if page.intro %}
+                <div class="search-intro">{{ page.intro|richtext }}</div>
+            {% endif %}
         
-        <form action="" method="get" class="search-form">
-            <input type="text" name="query" 
-                   placeholder="Поиск по проектам и статьям..." 
-                   value="{{ query }}">
-            <button type="submit">Найти</button>
-        </form>
+            <form action="" method="get" class="search-form">
+                <input type="text" name="query" 
+                    placeholder="Поиск по статьям..." 
+                    value="{{ query }}">
+                <button type="submit"></button>
+            </form>
+        </div>
         
         {% if query %}
             <div class="search-results">
-                <h2>Результаты поиска: "{{ query }}"</h2>
+                <h4>Результаты поиска: "{{ query }}"</h4>
                 
                 {% if results %}
-                    <ul class="search-list">
+                <div class="blog-all-posts">
                     {% for result in results %}
-                        <li class="search-item">
-                            <a href="{% pageurl result %}" class="search-link">
-                                <h3>{{ result.title }}</h3>
-                                {% if result.specific.intro %}
-                                    <p>{{ result.specific.intro|truncatewords:20 }}</p>
+                        <article class="blog-post-full">
+                            <div class="block-img-descr">
+                                {% if result.specific.image %}
+                                    <div class="blog-post-image">
+                                        {% image result.specific.image original format-webp as post_img %}
+                                        <img src="{{ post_img.url }}" alt="{{ result.title }}">
+                                    </div>
                                 {% endif %}
-                                <span class="search-type">
-                                    {% if result.content_type.model == 'projectpage' %}
-                                        🚀 Проект
-                                    {% elif result.content_type.model == 'portfolioblogpostpage' %}
-                                        📝 Статья
+                                
+                                <div class="blog-post-details">
+                                    <h2 class="blog-post-title">
+                                        <a href="{% pageurl result %}">{{ result.title }}</a>
+                                    </h2>
+                                    
+                                    {% if result.specific.intro %}
+                                        <p class="blog-post-description">{{ result.specific.intro|truncatewords:40 }}</p>
                                     {% else %}
-                                        📄 Страница
+                                        <p class="blog-post-description">{{ result.specific.body|striptags|truncatewords:40 }}</p>
                                     {% endif %}
-                                </span>
-                            </a>
-                        </li>
+                                    
+                                    <!-- Только для проектов: отображаем статус -->
+                                    {% if result.content_type.model == 'projectpage' and request.user.is_superuser %}
+                                        <div class="project-status">
+                                            <!-- Статус готовности -->
+                                            {% if project.specific.is_ready %}
+                                                <span class="status status-ready">✅ Готов</span>
+                                            {% else %}
+                                                <span class="status status-not-ready">🔄 В работе</span>
+                                            {% endif %}
+                                            
+                                            <!-- Статус публикации -->
+                                            {% if not project.live %}
+                                                <span class="status status-draft">📝 Черновик</span>
+                                            {% elif project.specific.show_on_main %}
+                                                <span class="status status-on-main">⭐ На главной</span>
+                                            {% else %}
+                                                <span class="status status-published">✅ Опубликован</span>
+                                            {% endif %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="block-date-link">
+                                <div class="blog-post-date">
+                                    {{ result.specific.date|date:"d.m.Y" }}
+                                </div>
+                                
+                                <a href="{% pageurl result %}" class="blog-post-readmore">
+                                    Читать статью &nbsp;&nbsp; &rang;
+                                </a>
+                            </div>
+                        </article>
                     {% endfor %}
-                    </ul>
-                {% else %}
-                    <p>Ничего не найдено. Попробуйте изменить запрос.</p>
+                </div>
+                <!-- ===== ПАГИНАЦИЯ ===== -->
+                {% if results.paginator.num_pages > 1 %}
+                    <div class="pagination">
+                        {% if results.has_previous %}
+                            <a href="?query={{ query }}&page={{ results.previous_page_number }}" class="pagination__prev">←</a>
+                        {% else %}
+                            <span class="pagination__prev disabled">←</span>
+                        {% endif %}
+                        
+                        <div class="pagination__numbers">
+                            {% for num in results.paginator.page_range %}
+                                {% if num == results.number %}
+                                    <span class="pagination__number active">{{ num }}</span>
+                                {% elif num > results.number|add:-3 and num < results.number|add:3 %}
+                                    <a href="?query={{ query }}&page={{ num }}" class="pagination__number">{{ num }}</a>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        
+                        {% if results.has_next %}
+                            <a href="?query={{ query }}&page={{ results.next_page_number }}" class="pagination__next">→</a>
+                        {% else %}
+                            <span class="pagination__next disabled">→</span>
+                        {% endif %}
+                    </div>
                 {% endif %}
+            {% else %}
+                <p class="search-empty">Ничего не найдено. Попробуйте изменить запрос.</p>
+            {% endif %}
             </div>
         {% endif %}
     </div>
 </div>
+{% include "blocks/button_up_block.html" %}
 
 {% endblock %}

@@ -37,9 +37,9 @@ python manage.py runserver
 
 # запуск файла - ./reset_and_run2.sh
 
-(
-python manage.py makemigrations
-python manage.py migrate
-)
+
+# python manage.py makemigrations
+# python manage.py migrate
+
 
 
