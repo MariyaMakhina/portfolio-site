@@ -1,0 +1,27 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+<div class="content-with-icon-block">
+{% if value.image %}
+  <div class="block-content-wrapper image-{{ value.image_position }} image-width-{{ value.image_width }}">
+            <div class="miniblock-image">
+                {% image value.image original jpegquality-100 as img %}
+                <img src="{{ img.url }}" alt="{{ value.title }}">
+            </div>
+    </div>
+{% endif %}
+
+
+  <div class="block-text">
+    <div class="block-header">
+        {% if value.icon_svg %}
+            {% image value.icon_svg original as icon %}
+            <img src="{{ icon.url }}" class="block-icon" alt="" width="32" height="32">
+        {% elif value.icon %}
+            <span class="block-icon-emoji">{{ value.icon }}</span>
+        {% endif %}
+        <h3>{{ value.title }}</h3>
+    </div>
+    {{ value.text|richtext }}
+  </div>
+  
+</div>

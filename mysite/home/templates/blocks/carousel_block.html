@@ -1,0 +1,34 @@
+{% load wagtailimages_tags %}
+
+{% if value.title %}
+    <div class="title-galery">
+        <h2>{{ value.title }}</h2>
+    </div>
+{% endif %}
+
+<div class="carousel-wrapper">
+    <div class="carousel-container">
+        <div class="carousel-track">
+            {% for slide in value.slides %}
+                <div class="carousel-slide">
+                    {% image slide.image original jpegquality-100 as img %}
+                    <img src="{{ img.url }}" alt="{{ slide.caption|default:'' }}" loading="lazy">
+                    {% if slide.caption %}
+                    <div class="carousel-caption">{{ slide.caption }}</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+        
+        {% if value.slides|length > 1 %}
+            <button class="carousel-prev" aria-label="Предыдущий">‹</button>
+            <button class="carousel-next" aria-label="Следующий">›</button>
+        {% endif %}
+    </div>
+    
+    <div class="carousel-dots">
+        {% for slide in value.slides %}
+            <span class="dot" data-index="{{ forloop.counter0 }}"></span>
+        {% endfor %}
+    </div>
+</div>

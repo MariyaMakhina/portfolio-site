@@ -1,0 +1,65 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+<div class="tab-item-wrapper">
+    <!-- {# Иконка (если есть) #}
+    {% if value.icon_svg %}
+        {% image value.icon_svg original as icon %}
+        <img src="{{ icon.url }}" class="tab-icon" alt="" width="24" height="24">
+    {% endif %}
+    
+    {# Заголовок #}
+    <h4>{{ value.title }}</h4> -->
+    
+    {# Текстовый контент #}
+    <div class="tab-content">
+        {{ value.content|richtext }}
+    </div>
+    
+    {# Галерея #}
+    {% if value.gallery %}
+        <div class="tab-gallery">
+            <div class="media-gallery">
+                {% for item in value.gallery %}
+                    <div class="media-item media-type-{{ item.media_type }}">
+                        {% if item.media_type == 'image' and item.image %}
+                            {% image item.image original format-webp jpegquality-100 as img %}
+                            <img src="{{ img.url }}" alt="{{ item.caption }}" loading="lazy">
+                            
+                        {% elif item.media_type == 'gif' and item.image %}
+                            {% image item.image original as img %}
+                            <img src="{{ img.url }}" alt="{{ item.caption }}" class="gif-image" loading="lazy">
+                            
+                        {% elif item.media_type == 'video' and item.video_url %}
+                            {% if 'youtube.com' in item.video_url or 'youtu.be' in item.video_url %}
+                                {% if 'youtu.be' in item.video_url %}
+                                    {% with video_id=item.video_url|cut:'https://youtu.be/' %}
+                                        <iframe src="https://www.youtube.com/embed/{{ video_id }}" 
+                                                frameborder="0" allowfullscreen></iframe>
+                                    {% endwith %}
+                                {% else %}
+                                    {% with video_id=item.video_url|slice:'-11:' %}
+                                        <iframe src="https://www.youtube.com/embed/{{ video_id }}" 
+                                                frameborder="0" allowfullscreen></iframe>
+                                    {% endwith %}
+                                {% endif %}
+                            {% elif 'vimeo.com' in item.video_url %}
+                                {% with video_id=item.video_url|cut:'https://vimeo.com/' %}
+                                    <iframe src="https://player.vimeo.com/video/{{ video_id }}" 
+                                            frameborder="0" allowfullscreen></iframe>
+                                {% endwith %}
+                            {% else %}
+                                <video controls preload="metadata">
+                                    <source src="{{ item.video_url }}" type="video/mp4">
+                                </video>
+                            {% endif %}
+                        {% endif %}
+                        
+                        {% if item.caption %}
+                            <p class="media-caption">{{ item.caption }}</p>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+</div>

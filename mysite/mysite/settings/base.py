@@ -31,6 +31,8 @@ ALLOWED_HOSTS = [
     'portfolio_mariyamakhina.ru:8000',
 ]
 
+
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -78,7 +80,7 @@ MIDDLEWARE = [
     "wagtail.contrib.redirects.middleware.RedirectMiddleware",
 ]
 
-WAGTAILIMAGES_EXTENSIONS = ['png', 'jpg', 'svg', 'avif', 'gif', 'jpeg', 'webp']
+WAGTAILIMAGES_EXTENSIONS = ['png', 'jpg', 'svg', 'avif', 'gif', 'jpeg', 'webp', 'gif']
 
 ROOT_URLCONF = "mysite.urls"
 
@@ -229,3 +231,10 @@ if not os.path.exists(EMAIL_FILE_PATH):
     os.makedirs(EMAIL_FILE_PATH)
 if not os.path.exists(MESSAGES_DIR):
     os.makedirs(MESSAGES_DIR)
+    
+
+
+# Отключаем конвертацию GIF в PNG
+WAGTAILIMAGES_FORMAT_CONVERSION = {
+    'gif': 'gif',
+}

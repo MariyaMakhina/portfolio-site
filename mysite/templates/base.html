@@ -62,5 +62,209 @@
     {% include "includes/footer.html" %}
     
     {% block extra_js %}{% endblock %}
+    <script>
+(function() {
+    // Функция для инициализации одного контейнера с табами
+    function initTabs(container) {
+        const buttons = container.querySelectorAll('.tab-button');
+        const panes = container.querySelectorAll('.tab-pane');
+        
+        if (buttons.length === 0) return;
+        
+        // Находим активную панель (которая имеет класс active в HTML)
+        let activeIndex = -1;
+        panes.forEach((pane, idx) => {
+            if (pane.classList.contains('active')) {
+                activeIndex = idx;
+            }
+        });
+        
+        // Если нет активной - делаем первую активной
+        if (activeIndex === -1) {
+            activeIndex = 0;
+            panes[0].classList.add('active');
+            buttons[0].classList.add('active');
+        }
+        
+        // Убеждаемся, что видна только активная панель
+        panes.forEach((pane, idx) => {
+            if (idx === activeIndex) {
+                pane.style.display = 'block';
+            } else {
+                pane.style.display = 'none';
+                pane.classList.remove('active');
+            }
+        });
+        
+        // Навешиваем обработчики на кнопки
+        buttons.forEach((button, idx) => {
+            // Убираем старые обработчики
+            const newButton = button.cloneNode(true);
+            button.parentNode.replaceChild(newButton, button);
+            
+            newButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Переключаем кнопки
+                const allButtons = container.querySelectorAll('.tab-button');
+                allButtons.forEach(btn => btn.classList.remove('active'));
+                newButton.classList.add('active');
+                
+                // Переключаем панели
+                const allPanes = container.querySelectorAll('.tab-pane');
+                allPanes.forEach((pane, i) => {
+                    pane.classList.remove('active');
+                    pane.style.display = 'none';
+                });
+                
+                if (allPanes[idx]) {
+                    allPanes[idx].classList.add('active');
+                    allPanes[idx].style.display = 'block';
+                }
+            });
+        });
+    }
+    
+    // Инициализируем все контейнеры с табами после загрузки страницы
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.tabs-container').forEach(initTabs);
+        });
+    } else {
+        document.querySelectorAll('.tabs-container').forEach(initTabs);
+    }
+})();
+</script>
+<script>
+// Выравнивание высоты вкладок
+function fixTabHeights() {
+    document.querySelectorAll('.tabs-container').forEach(container => {
+        const panes = container.querySelectorAll('.tab-pane');
+        const contentDiv = container.querySelector('.tabs-content');
+        if (!contentDiv) return;
+        
+        let maxHeight = 0;
+        
+        // Запоминаем активную вкладку
+        const activePane = container.querySelector('.tab-pane.active');
+        
+        // Измеряем все панели (делаем их видимыми для измерения)
+        panes.forEach(pane => {
+            pane.style.display = 'block';
+            pane.style.visibility = 'hidden';
+            pane.style.position = 'absolute';
+            const height = pane.offsetHeight;
+            if (height > maxHeight) maxHeight = height;
+            pane.style.display = '';
+            pane.style.visibility = '';
+            pane.style.position = '';
+        });
+        
+        // Возвращаем активную панель
+        if (activePane) {
+            activePane.style.display = 'block';
+        } else if (panes[0]) {
+            panes[0].style.display = 'block';
+        }
+        
+        // Устанавливаем минимальную высоту
+        if (maxHeight > 0) {
+            contentDiv.style.minHeight = maxHeight + 'px';
+        }
+    });
+}
+
+// Запускаем после загрузки
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', fixTabHeights);
+} else {
+    fixTabHeights();
+}
+
+// Пересчитываем при изменении окна
+let resizeTimer;
+window.addEventListener('resize', function() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(fixTabHeights, 150);
+});
+
+// Карусель скриншотов
+function initCarousel(container) {
+    const track = container.querySelector('.carousel-track');
+    const slides = container.querySelectorAll('.carousel-slide');
+    const prevBtn = container.querySelector('.carousel-prev');
+    const nextBtn = container.querySelector('.carousel-next');
+    const dots = container.querySelectorAll('.dot');
+    
+    if (!track || slides.length === 0) return;
+    
+    let currentIndex = 0;
+    const totalSlides = slides.length;
+    
+    function updateCarousel() {
+        // Сдвигаем трек
+        track.style.transform = 'translateX(-' + (currentIndex * 100) + '%)';
+        
+        // Обновляем точки
+        dots.forEach((dot, i) => {
+            if (i === currentIndex) {
+                dot.classList.add('active');
+            } else {
+                dot.classList.remove('active');
+            }
+        });
+    }
+    
+    function nextSlide() {
+        currentIndex = (currentIndex + 1) % totalSlides;
+        updateCarousel();
+    }
+    
+    function prevSlide() {
+        currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+        updateCarousel();
+    }
+    
+    // Кнопки
+    if (prevBtn) {
+        prevBtn.onclick = (e) => {
+            e.preventDefault();
+            prevSlide();
+        };
+    }
+    
+    if (nextBtn) {
+        nextBtn.onclick = (e) => {
+            e.preventDefault();
+            nextSlide();
+        };
+    }
+    
+    // Точки
+    dots.forEach((dot, idx) => {
+        dot.onclick = () => {
+            currentIndex = idx;
+            updateCarousel();
+        };
+    });
+    
+    // Инициализация
+    updateCarousel();
+    
+    // Автопрокрутка
+    let interval = setInterval(nextSlide, 5000);
+    
+    container.onmouseenter = () => clearInterval(interval);
+    container.onmouseleave = () => {
+        clearInterval(interval);
+        interval = setInterval(nextSlide, 5000);
+    };
+}
+
+// Запуск после загрузки страницы
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.carousel-container').forEach(initCarousel);
+});
+</script>
 </body>
 </html>

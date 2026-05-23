@@ -13,11 +13,15 @@
     <div class="block-content">
         {% for project in value.projects %}
             <div class="boxs project-card">
-                <a href="{{ project.specific.get_link_url }}" class="link-block" target="_blank" rel="noopener noreferrer">
+                <a href="{% pageurl project %}" class="link-block">
                     <div class="box">
                         <div class="imag-proj">
-                            {% if project.specific.image %}
+                            {% if project.specific.card_image %}
+                                {% image project.specific.card_image fill-350x250 as project_img %}
+                            {% elif project.specific.image %}
                                 {% image project.specific.image fill-350x250 as project_img %}
+                            {% endif %}
+                            {% if project_img %}
                                 <img src="{{ project_img.url }}" alt="{{ project.title }}">
                             {% endif %}
                         </div>

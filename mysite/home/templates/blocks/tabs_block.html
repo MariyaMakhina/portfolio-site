@@ -1,0 +1,34 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% if value.title %}
+      <div class="title-tabs">
+        <h2>{{ value.title }}</h2>
+      </div>
+{% endif %}
+
+<div class="tabs-container">
+    <div class="tabs-header">
+        {% for tab in value.tabs %}
+            <button class="tab-button {% if forloop.first %}active{% endif %}" 
+                    onclick="switchTab(this, {{ forloop.counter0 }})">
+                {% if tab.icon_svg %}
+                    {% image tab.icon_svg original as icon %}
+                    <img src="{{ icon.url }}" class="tab-icon" alt="" width="20" height="20">
+                {% endif %}
+                
+                {{ tab.title }}
+            </button>
+        {% endfor %}
+    </div>
+    
+    <div class="tabs-content">
+        {% for tab in value.tabs %}
+            <div class="tab-pane {% if forloop.first %}active{% endif %}" 
+                 id="tab-{{ forloop.counter0 }}">
+                <!-- {{ tab.content|richtext }} -->
+                  {% include_block tab %}
+            </div>
+        {% endfor %}
+    </div>
+</div>
+

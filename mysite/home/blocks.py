@@ -143,3 +143,194 @@ class ButtonUpBlock(blocks.StructBlock):
         icon = 'arrow-up'
         label = 'Кнопка наверх'
         collapsed = True
+        
+
+class MediaItemBlock(blocks.StructBlock):
+    """Один элемент медиа (изображение, GIF, видео)"""
+    media_type = blocks.ChoiceBlock(
+        choices=[
+            ('image', 'Изображение'),
+            ('gif', 'GIF-анимация'),
+            ('video', 'Видео'),
+        ],
+        label="Тип медиа"
+    )
+    image = ImageChooserBlock(
+        required=False,
+        label="Изображение или GIF",
+        help_text="Загрузите JPG, PNG или GIF"
+    )
+    video_url = blocks.URLBlock(
+        required=False,
+        label="Ссылка на видео",
+        help_text="YouTube, Vimeo или прямой URL"
+    )
+    caption = blocks.CharBlock(
+        required=False,
+        label="Подпись",
+        help_text="Краткое описание"
+    )
+    
+    class Meta:
+        icon = 'media'
+        label = 'Медиа файл'
+        template = 'blocks/media_item.html'
+
+
+class TabItemBlock(blocks.StructBlock):
+    """Одна вкладка"""
+    title = blocks.CharBlock(
+        required=True,
+        label="Название вкладки",
+        help_text="Например: Редактирование меню"
+    )
+    content = blocks.RichTextBlock(
+        required=True,
+        label="Содержимое вкладки",
+        help_text="Текст, который будет внутри вкладки"
+    )
+    icon_svg = ImageChooserBlock(
+        required=False,
+        label="SVG иконка",
+        help_text="Загрузите SVG файл"
+    )
+    # НОВОЕ ПОЛЕ: галерея внутри вкладки
+    gallery = blocks.ListBlock(
+        MediaItemBlock(),
+        required=False,
+        label="Медиа галерея",
+        help_text="Добавьте изображения, GIF или видео для этой вкладки"
+    )
+    
+    class Meta:
+        icon = 'doc-full'
+        label = 'Вкладка'
+        template = 'blocks/tab_item.html'
+
+
+class TabsBlock(blocks.StructBlock):
+    """Блок с вкладками (табами)"""
+    title = blocks.CharBlock(
+        required=False,
+        label="Заголовок блока",
+        help_text="Отображается над вкладками"
+    )
+    tabs = blocks.ListBlock(
+        TabItemBlock(),
+        label="Вкладки",
+        help_text="Добавьте от 2 до 5 вкладок"
+    )
+    
+    class Meta:
+        icon = 'folder-open-1'
+        label = 'Блок с вкладками'
+        template = 'blocks/tabs_block.html'
+        
+class CarouselImageBlock(blocks.StructBlock):
+    """Одно изображение для карусели"""
+    image = ImageChooserBlock(required=True, label="Изображение")
+    caption = blocks.CharBlock(required=False, label="Подпись", help_text="Краткое описание скриншота")
+    
+    class Meta:
+        icon = 'image'
+        label = 'Слайд'
+        template = 'blocks/carousel_image_block.html'
+
+
+class CarouselBlock(blocks.StructBlock):
+    """Карусель скриншотов"""
+    title = blocks.CharBlock(required=False, label="Заголовок блока", help_text="Например: Как выглядит сайт")
+    slides = blocks.ListBlock(
+        CarouselImageBlock(),
+        label="Слайды",
+        help_text="Добавьте скриншоты сайта (рекомендуется ширина 1200px+)"
+    )
+    
+    class Meta:
+        icon = 'image'
+        label = 'Карусель скриншотов'
+        template = 'blocks/carousel_block.html'
+        
+        
+class ContentWithIconBlock(blocks.StructBlock):
+    """Блок контента с иконкой, текстом и изображением (обтекание)"""
+    
+    # Заголовок с иконкой
+    title = blocks.CharBlock(
+        required=True,
+        label="Заголовок",
+        help_text="Заголовок блока"
+    )
+    
+    # Иконка (можно SVG или эмодзи)
+    icon = blocks.CharBlock(
+        required=False,
+        label="Иконка (эмодзи)",
+        help_text="Например: 🚀, 📝, 🖼️, 🔧",
+        default="📌"
+    )
+    
+    # Или загрузить свою SVG иконку
+    icon_svg = ImageChooserBlock(
+        required=False,
+        label="SVG иконка",
+        help_text="Или загрузите свой SVG файл"
+    )
+    
+    # Текст
+    text = blocks.RichTextBlock(
+        required=True,
+        label="Текст",
+        help_text="Основное содержание блока"
+    )
+    
+    # Изображение
+    image = ImageChooserBlock(
+        required=False,
+        label="Изображение",
+        help_text="Фото, скриншот или GIF"
+    )
+    
+    # Положение изображения
+    image_position = blocks.ChoiceBlock(
+        choices=[
+            ('left', 'Слева от текста'),
+            ('right', 'Справа от текста'),
+        ],
+        default='left',
+        label="Положение изображения",
+        help_text="С какой стороны будет изображение относительно текста"
+    )
+    
+    # Ширина изображения
+    image_width = blocks.ChoiceBlock(
+        choices=[
+            ('30', '30%'),
+            ('40', '40%'),
+            ('50', '50%'),
+            ('60', '60%'),
+        ],
+        default='40',
+        label="Ширина изображения",
+        help_text="Процент от ширины блока"
+    )
+    
+    class Meta:
+        icon = 'image'
+        label = 'Блок с обтеканием текстом избржн'
+        template = 'blocks/content_with_icon_block.html'
+        
+class ClearFloatBlock(blocks.StructBlock):
+    """Блок для сброса обтекания (останавливает float)"""
+    
+    line_visible = blocks.BooleanBlock(
+        required=False,
+        default=True,
+        label="Показывать разделитель",
+        help_text="Добавить видимую линию между блоками"
+    )
+    
+    class Meta:
+        icon = 'horizontalrule'
+        label = 'Сброс обтекания'
+        template = 'blocks/clear_float_block.html'

@@ -19,7 +19,9 @@ from .blocks import (
     HeroBlock, SelectedProjectsBlock, TemplateBlock, TemplatesBlock,
     EducationItemBlock, SkillItemBlock, EducationSkillsBlock,
     ContactFormBlock, BlogSectionBlock, ButtonUpBlock, SocialLinksBlock,
+    TabsBlock, ContentWithIconBlock, ClearFloatBlock,
 )
+from .blocks import CarouselBlock 
 
 
 # ============ Блог портфолио ============
@@ -362,14 +364,20 @@ class ProjectContentBlock(blocks.StructBlock):
 
 
 class ProjectPage(Page):
+    card_image = models.ForeignKey('wagtailimages.Image', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', verbose_name="Фото для карточки", help_text="Если не выбрано, будет использоваться основное фото проекта")
     intro = models.CharField(max_length=250, blank=True, verbose_name="Краткое описание")
-    content = StreamField([('content_block', ProjectContentBlock())], blank=True, use_json_field=True, verbose_name="Контент проекта")
+    content = StreamField([('content_block', ProjectContentBlock()), ('tabs_block', TabsBlock()), ('carousel_block', CarouselBlock()), ('content_with_icon', ContentWithIconBlock()), ('clear_float', ClearFloatBlock()),], blank=True, use_json_field=True, verbose_name="Контент проекта")
     image = models.ForeignKey('wagtailimages.Image', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     video = models.ForeignKey('wagtailmedia.Media', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', limit_choices_to={'type': 'video'})
     technologies = models.CharField(max_length=500, blank=True, verbose_name="Технологии")
     completion_date = models.DateField(null=True, blank=True, verbose_name="Дата завершения")
     link_page = models.ForeignKey('wagtailcore.Page', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     external_link = models.URLField(blank=True, verbose_name="Внешняя ссылка")
+    github_link = models.URLField(
+        blank=True,
+        verbose_name="Ссылка на GitHub",
+        help_text="Ссылка на репозиторий проекта"
+    )
     
     search_fields = Page.search_fields + [
         index.SearchField('title', partial_match=True, boost=10),
@@ -385,10 +393,10 @@ class ProjectPage(Page):
     )
     
     content_panels = Page.content_panels + [
-        MultiFieldPanel([FieldPanel('intro'), FieldPanel('image'), MediaChooserPanel('video', media_type='video')], heading="Основная информация"),
+        MultiFieldPanel([FieldPanel('card_image'), FieldPanel('intro'), FieldPanel('image'), MediaChooserPanel('video', media_type='video')], heading="Основная информация"),
         MultiFieldPanel([FieldPanel('technologies'), FieldPanel('completion_date')], heading="Детали"),
         MultiFieldPanel([FieldPanel('is_ready')], heading="Статус проекта"),
-        MultiFieldPanel([FieldPanel('link_page'), FieldPanel('external_link')], heading="Ссылка"),
+        MultiFieldPanel([FieldPanel('link_page'), FieldPanel('external_link'), FieldPanel('github_link')], heading="Ссылка"),
         FieldPanel('content'),
     ]
     

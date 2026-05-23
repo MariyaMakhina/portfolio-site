@@ -22,6 +22,7 @@
                         <span class="point">•</span>
                         <span class="project-category-label">{{ page.get_category_name }}</span>
                     </div>
+                    <div class="simple-text">{{ page.mini_description|richtext }}</div>
                        <!-- Описание -->
                     {% if page.description %}
                         <div class="project-description simple-text">
