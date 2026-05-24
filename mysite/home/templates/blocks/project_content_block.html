@@ -10,9 +10,11 @@
         <div class="block-description">{{ value.description|richtext }}</div>
     {% endif %}
     {% if value.image %}
-        {% image value.image original jpegquality-100 as block_img %}
+        <!-- {% image value.image original jpegquality-100 as block_img %} -->
         <div class="block-image">
-            <img src="{{ block_img.url }}" alt="{{ value.title|default:'Изображение проекта' }}">
+            <img src="{% image_url value.image 'original' %}" alt="{{ value.title|default:'Изображение проекта' }}" loading="lazy">
+
+            <!-- <img src="{{ block_img.url }}" alt="{{ value.title|default:'Изображение проекта' }}"> -->
         </div>
     {% endif %}
     </div>

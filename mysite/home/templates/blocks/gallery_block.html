@@ -1,0 +1,68 @@
+{% load wagtailimages_tags %}
+
+
+{% if value.images %}
+    <div class="gallery-section ">
+        {% if value.heading %}
+            <h3 class="gallery-heading">{{ value.heading }}</h3>
+        {% endif %}
+
+        <div id="galleryCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
+            {# Индикаторы (опционально) #}
+            <div class="carousel-indicators">
+                {% for item in value.images %}
+                    <button type="button" data-bs-target="#galleryCarousel" data-bs-slide-to="{{ forloop.counter0 }}" {% if forloop.first %}class="active" aria-current="true"{% endif %} aria-label="Slide {{ forloop.counter }}"></button>
+                {% endfor %}
+            </div>
+
+            {# Слайды #}
+            <div class="carousel-inner">
+                {% for item in value.images %}
+                    <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                        {% image item.image original as img %}
+                        <img src="{{ img.url }}" class="d-block w-100" alt="{{ img.alt }}" loading="lazy">
+                        
+                        {% if item.caption %}
+                            <div class="carousel-caption d-none d-md-block">
+                                <p>{{ item.caption }}</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var myCarousel = document.querySelector('#galleryCarousel');
+        var carousel = new bootstrap.Carousel(myCarousel, {
+            interval: 3000, // Скорость смены в мс (3 секунды)
+            ride: 'carousel',
+            pause: 'hover'   // Пауза при наведении мыши
+        });
+    });
+</script>
+
+
+
+<!-- {% if value.images %}
+    <div class="gallery-section">
+        {% if value.heading %}
+            <h3 class="gallery-heading">{{ value.heading }}</h3>
+        {% endif %}
+        
+        <div class="gallery-carousel">
+            {% for slide in value.images %}
+                <div class="gallery-slide">
+                    {% image slide.image fill-800x600 as img %}
+                    <img src="{{ img.url }}" alt="{{ slide.caption|default:value.heading }}" loading="lazy">
+                    {% if slide.caption %}
+                        <p class="gallery-caption">{{ slide.caption }}</p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endif %} -->

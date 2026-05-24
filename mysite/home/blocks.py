@@ -1,6 +1,7 @@
 from wagtail import blocks
 from wagtail.images.blocks import ImageChooserBlock
-from wagtail.blocks import PageChooserBlock
+from wagtail.blocks import PageChooserBlock, StructBlock, ListBlock, CharBlock, ChooserBlock
+from wagtail.snippets.blocks import SnippetChooserBlock
 
 
 class HeroBlock(blocks.StructBlock):
@@ -238,7 +239,7 @@ class CarouselImageBlock(blocks.StructBlock):
 
 
 class CarouselBlock(blocks.StructBlock):
-    """Карусель скриншотов"""
+    """Карусель скриншотов внизу страницы"""
     title = blocks.CharBlock(required=False, label="Заголовок блока", help_text="Например: Как выглядит сайт")
     slides = blocks.ListBlock(
         CarouselImageBlock(),
@@ -250,6 +251,37 @@ class CarouselBlock(blocks.StructBlock):
         icon = 'image'
         label = 'Карусель скриншотов'
         template = 'blocks/carousel_block.html'
+        
+# ==================================== галерея в rjyntynht
+
+class GalleryImageBlock(blocks.StructBlock):
+    """Одно изображение для галереи"""
+    image = ImageChooserBlock(required=True, label="Изображение")
+    caption = blocks.CharBlock(required=False, label="Подпись", help_text="Краткое описание скриншота")
+    
+    class Meta:
+        icon = 'image'
+        label = 'Изображение галереи'
+        template = 'blocks/gallery_image_block.html'
+
+
+class GalleryBlock(blocks.StructBlock):
+    """Галерея изображений (карусель) для проекта"""
+    heading = blocks.CharBlock(
+        required=False,
+        label="Заголовок галереи",
+        help_text="Например: Скриншоты сайта"
+    )
+    images = blocks.ListBlock(
+        GalleryImageBlock(),
+        label="Изображения",
+        help_text="Добавьте изображения для галереи"
+    )
+    
+    class Meta:
+        icon = 'image'
+        label = 'Галерея изображений'
+        template = 'blocks/gallery_block.html'
         
         
 class ContentWithIconBlock(blocks.StructBlock):
@@ -284,12 +316,18 @@ class ContentWithIconBlock(blocks.StructBlock):
         help_text="Основное содержание блока"
     )
     
-    # Изображение
-    image = ImageChooserBlock(
-        required=False,
-        label="Изображение",
-        help_text="Фото, скриншот или GIF"
-    )
+    # блок выбора медиа-контента
+    media = blocks.StreamBlock([
+        ('single_image', ImageChooserBlock(label="Одиночное фото", help_text="Фото, скриншот или GIF")),
+        ('gallery', GalleryBlock(label="Карусель изображений")),
+    ], max_num=1, required=False, label="Медиа-контент (фото или галерея)")
+    
+    # # Изображение
+    # image = ImageChooserBlock(
+    #     required=False,
+    #     label="Изображение",
+    #     help_text="Фото, скриншот или GIF"
+    # )
     
     # Положение изображения
     image_position = blocks.ChoiceBlock(
@@ -334,3 +372,22 @@ class ClearFloatBlock(blocks.StructBlock):
         icon = 'horizontalrule'
         label = 'Сброс обтекания'
         template = 'blocks/clear_float_block.html'
+
+# class SnippetCarouselBlock(blocks.StructBlock):
+#     """Карусель из сниппета (переиспользуемая)"""
+#     heading = blocks.CharBlock(
+#         required=False,
+#         label="Заголовок",
+#         help_text="Например: Дизайн главной страницы"
+#     )
+#     carousel = SnippetChooserBlock(
+#         'home.Carousel',  # Указываем модель сниппета в виде строки "app_label.ModelName"
+#         label="Выберите карусель",
+#         help_text="Выберите заранее созданную карусель из сниппетов"
+#     )
+    
+#     class Meta:
+#         icon = 'image'
+#         label = 'Карусель (переиспользуемая)'
+#         template = 'blocks/snippet_carousel_block.html'
+        

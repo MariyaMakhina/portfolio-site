@@ -22,9 +22,10 @@
             <div class="block-project-page">
                 <!-- Главное изображение -->
                 {% if page.image %}
-                    {% image page.image original as main_img %}
+                    <!-- {% image page.image original as main_img %} -->
                     <div class="project-main-image">
-                        <img src="{{ main_img.url }}" alt="{{ page.title }}">
+                        <img src="{% image_url page.image 'original' %}" alt="{{ value.title }}" loading="lazy">
+                        <!-- <img src="{{ main_img.url }}" alt="{{ page.title }}"> -->
                     </div>
                 {% endif %}
                 

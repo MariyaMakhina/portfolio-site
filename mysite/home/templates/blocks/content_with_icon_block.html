@@ -1,14 +1,25 @@
 {% load wagtailcore_tags wagtailimages_tags %}
 
 <div class="content-with-icon-block">
-{% if value.image %}
+    {% if value.media %}
   <div class="block-content-wrapper image-{{ value.image_position }} image-width-{{ value.image_width }}">
-            <div class="miniblock-image">
-                {% image value.image original jpegquality-100 as img %}
-                <img src="{{ img.url }}" alt="{{ value.title }}">
-            </div>
+    <div class="miniblock-image">
+    {% for child in value.media %}
+        {% if child.block_type == 'single_image' %}
+                {% image child.value original as img %}
+                <img src="{{ img.url }}" alt="{{ value.title }}" loading="lazy">
+        {% elif child.block_type == 'gallery' %}
+            {# Верстка для галереи (обертка та же, но внутри вызывается блок галереи) #}
+                {% include_block child %}
+        {% endif %}
+    {% endfor %}
     </div>
-{% endif %}
+
+
+                <!-- {% image value.image original jpegquality-100 as img %}
+                <img src="{{ img.url }}" alt="{{ value.title }}"> -->
+    </div>
+    {% endif %}
 
 
   <div class="block-text">

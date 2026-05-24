@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.urls import include, path
+from django.urls import include, path, re_path
 from django.contrib import admin
 
 from wagtail.admin import urls as wagtailadmin_urls
@@ -13,6 +13,8 @@ from django.views.generic import TemplateView
 from wagtail.contrib.sitemaps.views import sitemap
 
 from wagtail.models import Page
+
+from wagtail.images.views.serve import ServeView
 
 def sitemap_view(request):
     pages = Page.objects.live().public()
@@ -34,6 +36,8 @@ urlpatterns = [
     path('robots.txt', TemplateView.as_view(template_name='robots.txt', content_type='text/plain')),
     # path('sitemap.xml', sitemap),
     path('sitemap.xml', sitemap_view),
+    re_path(r'^images/([^/]*)/(\d*)/([^/]*)/[^/]*$', ServeView.as_view(), name='wagtailimages_serve'),
+    re_path(r'', include(wagtail_urls)),
 ]
 
 
@@ -44,6 +48,13 @@ if settings.DEBUG:
     # Serve static and media files from development server
     urlpatterns += staticfiles_urlpatterns()
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    
+    import debug_toolbar
+    urlpatterns = [
+        path('__debug__/', include(debug_toolbar.urls)),
+    ] + urlpatterns
+    
+    
 
 urlpatterns = urlpatterns + [
     # For anything not caught by a more specific rule above, hand over to

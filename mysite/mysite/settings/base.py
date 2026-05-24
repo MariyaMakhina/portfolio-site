@@ -64,12 +64,14 @@ INSTALLED_APPS = [
     'dashboard',
     "wagtailmedia",
     'wagtail.contrib.sitemaps',  # для карты сайта
+    'debug_toolbar',
 ]
 
 # Для нормального отображения кириллицы в URL
 USE_X_FORWARDED_HOST = True
 
 MIDDLEWARE = [
+    'debug_toolbar.middleware.DebugToolbarMiddleware', 
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -79,6 +81,9 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "wagtail.contrib.redirects.middleware.RedirectMiddleware",
 ]
+
+# убрать комм для отображения панели проверки скорости загрузки страницы Django Debug Toolbar
+# INTERNAL_IPS = ['127.0.0.1']
 
 WAGTAILIMAGES_EXTENSIONS = ['png', 'jpg', 'svg', 'avif', 'gif', 'jpeg', 'webp', 'gif']
 

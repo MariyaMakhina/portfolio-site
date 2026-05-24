@@ -1,7 +1,7 @@
 from django.db import models
-from wagtail.models import Page
+from wagtail.models import Page, Orderable
 from wagtail.fields import RichTextField, StreamField
-from wagtail.admin.panels import FieldPanel, MultiFieldPanel
+from wagtail.admin.panels import FieldPanel, MultiFieldPanel, InlinePanel
 from wagtail.search import index
 from wagtail.contrib.settings.models import BaseSiteSetting, register_setting
 from django.core.mail import send_mail
@@ -19,9 +19,12 @@ from .blocks import (
     HeroBlock, SelectedProjectsBlock, TemplateBlock, TemplatesBlock,
     EducationItemBlock, SkillItemBlock, EducationSkillsBlock,
     ContactFormBlock, BlogSectionBlock, ButtonUpBlock, SocialLinksBlock,
-    TabsBlock, ContentWithIconBlock, ClearFloatBlock,
+    TabsBlock, ContentWithIconBlock, ClearFloatBlock, GalleryBlock
 )
 from .blocks import CarouselBlock 
+from modelcluster.fields import ParentalKey
+from modelcluster.models import ClusterableModel
+from wagtail.snippets.models import register_snippet
 
 
 # ============ Блог портфолио ============
@@ -366,7 +369,7 @@ class ProjectContentBlock(blocks.StructBlock):
 class ProjectPage(Page):
     card_image = models.ForeignKey('wagtailimages.Image', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', verbose_name="Фото для карточки", help_text="Если не выбрано, будет использоваться основное фото проекта")
     intro = models.CharField(max_length=250, blank=True, verbose_name="Краткое описание")
-    content = StreamField([('content_block', ProjectContentBlock()), ('tabs_block', TabsBlock()), ('carousel_block', CarouselBlock()), ('content_with_icon', ContentWithIconBlock()), ('clear_float', ClearFloatBlock()),], blank=True, use_json_field=True, verbose_name="Контент проекта")
+    content = StreamField([('content_block', ProjectContentBlock()), ('tabs_block', TabsBlock()), ('carousel_block', CarouselBlock()), ('gallery_block', GalleryBlock()), ('content_with_icon', ContentWithIconBlock()), ('clear_float', ClearFloatBlock()),], blank=True, use_json_field=True, verbose_name="Контент проекта")
     image = models.ForeignKey('wagtailimages.Image', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     video = models.ForeignKey('wagtailmedia.Media', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', limit_choices_to={'type': 'video'})
     technologies = models.CharField(max_length=500, blank=True, verbose_name="Технологии")
@@ -459,3 +462,16 @@ class SearchPage(Page):
     class Meta:
         verbose_name = "Страница поиска веб-портфолио"
         verbose_name_plural = "Страницы поиска веб-портфолио"
+        
+class CarouselImage(Orderable):
+    carousel = ParentalKey('Carousel', related_name='images', on_delete=models.CASCADE)
+    image = models.ForeignKey('wagtailimages.Image', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
+    caption = models.CharField(max_length=255, blank=True)
+
+@register_snippet
+class Carousel(ClusterableModel):
+    name = models.CharField(max_length=100)
+    panels = [
+        FieldPanel('name'),
+        InlinePanel('images', label="Изображения", min_num=2, max_num=10)
+    ]
