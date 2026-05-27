@@ -25,27 +25,28 @@ def sitemap_view(request):
     )(request)
 
 
-
 urlpatterns = [
-    path("django-admin/", admin.site.urls),
+    # Используем переменные из настроек
+    path(settings.DJANGO_ADMIN_URL, admin.site.urls),
     path('admin/dashboard/', include('dashboard.urls')),
-    path("admin/", include(wagtailadmin_urls)),
+    path(settings.WAGTAIL_ADMIN_URL, include(wagtailadmin_urls)),
     path("documents/", include(wagtaildocs_urls)),
     path("search/", search_views.search, name="search"),
     path('favicon.ico', RedirectView.as_view(url='/static/favicon.png', permanent=True)),
     path('robots.txt', TemplateView.as_view(template_name='robots.txt', content_type='text/plain')),
-    # path('sitemap.xml', sitemap),
     path('sitemap.xml', sitemap_view),
     re_path(r'^images/([^/]*)/(\d*)/([^/]*)/[^/]*$', ServeView.as_view(), name='wagtailimages_serve'),
-    re_path(r'', include(wagtail_urls)),
 ]
 
+# Отдельно добавляем wagtail_urls, чтобы они были последними
+urlpatterns += [
+    re_path(r'', include(wagtail_urls)),
+]
 
 if settings.DEBUG:
     from django.conf.urls.static import static
     from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
-    # Serve static and media files from development server
     urlpatterns += staticfiles_urlpatterns()
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     
@@ -53,15 +54,3 @@ if settings.DEBUG:
     urlpatterns = [
         path('__debug__/', include(debug_toolbar.urls)),
     ] + urlpatterns
-    
-    
-
-urlpatterns = urlpatterns + [
-    # For anything not caught by a more specific rule above, hand over to
-    # Wagtail's page serving mechanism. This should be the last pattern in
-    # the list:
-    path("", include(wagtail_urls)),
-    # Alternatively, if you want Wagtail pages to be served from a subpath
-    # of your site, rather than the site root:
-    #    path("pages/", include(wagtail_urls)),
-]

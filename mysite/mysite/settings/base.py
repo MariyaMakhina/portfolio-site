@@ -10,9 +10,47 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
+from dotenv import load_dotenv
+import os
+import sys
+
+# Автоматически выбираем файл окружения в зависимости от команды запуска
+if 'runserver' in sys.argv:
+    # Локальная разработка
+    env_file = '.env.dev'
+else:
+    # Продакшен (gunicorn, uwsgi, тесты, shell и т.д.)
+    env_file = '.env'
+
+# Загружаем переменные
+load_dotenv(env_file)
+
+# Диагностика: проверяем, какие переменные загрузились
+print("=== ДИАГНОСТИКА ОКРУЖЕНИЯ ===")
+print(f"DEBUG = {os.environ.get('DEBUG')}")
+print(f"SECRET_KEY (первые 20 символов) = {os.environ.get('SECRET_KEY', 'НЕ ЗАГРУЖЕН')[:20]}")
+print(f"ALLOWED_HOSTS = {os.environ.get('ALLOWED_HOSTS')}")
+print("==============================")
+
+
+
+# Читаем переменные из окружения
+WAGTAIL_ADMIN_URL = os.environ.get('WAGTAIL_ADMIN_URL', 'admin/')
+DJANGO_ADMIN_URL = os.environ.get('DJANGO_ADMIN_URL', 'django-admin/')
+
+# Секретный ключ — только из окружения
+SECRET_KEY = os.environ.get('SECRET_KEY')
+if not SECRET_KEY:
+    raise ValueError("SECRET_KEY must be set in environment variables")
+
+# DEBUG — из окружения, по умолчанию False
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+
+# ALLOWED_HOSTS — из окружения
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split(',')
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 from pathlib import Path
-import os
 
 PROJECT_DIR = Path(__file__).resolve().parent.parent
 BASE_DIR = PROJECT_DIR.parent
@@ -20,17 +58,6 @@ BASE_DIR = PROJECT_DIR.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
-
-ALLOWED_HOSTS = [
-    'mariyamakhina.ru',
-    'www.mariyamakhina.ru',
-    'localhost',
-    '127.0.0.1:8000',
-    '127.0.0.1',
-    'portfolio_mariyamakhina.ru',
-    'portfolio_mariyamakhina.ru:8000',
-]
-
 
 
 # Application definition
@@ -71,8 +98,8 @@ INSTALLED_APPS = [
 USE_X_FORWARDED_HOST = True
 
 MIDDLEWARE = [
-    'debug_toolbar.middleware.DebugToolbarMiddleware', 
     "django.middleware.security.SecurityMiddleware",
+    'debug_toolbar.middleware.DebugToolbarMiddleware', 
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -201,7 +228,7 @@ WAGTAILSEARCH_BACKENDS = {
 
 # Base URL to use when referring to full URLs within the Wagtail admin backend -
 # e.g. in notification emails. Don't include '/admin' or a trailing slash
-WAGTAILADMIN_BASE_URL = "http://example.com"
+WAGTAILADMIN_BASE_URL = os.environ.get('WAGTAILADMIN_BASE_URL', 'http://localhost:8000')
 
 # Allowed file extensions for documents in the document library.
 # This can be omitted to allow all files, but note that this may present a security risk
@@ -222,19 +249,6 @@ MESSAGES_DIR = os.path.join(BASE_DIR, 'messages')
 if not os.path.exists(EMAIL_FILE_PATH):
     os.makedirs(EMAIL_FILE_PATH)
 if not os.path.exists(MESSAGES_DIR):
-    os.makedirs(MESSAGES_DIR)# Добавь в конец файла:
-
-# Настройки email для разработки (письма сохраняются в файлы)
-EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
-EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_emails')
-
-# Папка для сохранения сообщений из формы
-MESSAGES_DIR = os.path.join(BASE_DIR, 'messages')
-
-# Создаем папки при запуске
-if not os.path.exists(EMAIL_FILE_PATH):
-    os.makedirs(EMAIL_FILE_PATH)
-if not os.path.exists(MESSAGES_DIR):
     os.makedirs(MESSAGES_DIR)
     
 
@@ -243,3 +257,39 @@ if not os.path.exists(MESSAGES_DIR):
 WAGTAILIMAGES_FORMAT_CONVERSION = {
     'gif': 'gif',
 }
+
+# ============ НАСТРОЙКИ БЕЗОПАСНОСТИ ДЛЯ ПРОДАКШЕНА ============
+# Эти настройки активны только когда DEBUG=False
+
+if not DEBUG:
+    # Принудительное перенаправление на HTTPS
+    SECURE_SSL_REDIRECT = True
+    
+    # Cookies только по HTTPS
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    
+    # HSTS — запрещаем браузеру заходить по HTTP (1 год = 31536000 секунд)
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    
+    # Защита от встраивания в iframe (кликджекинг)
+    X_FRAME_OPTIONS = 'DENY'
+    
+    # Защита от XSS-атак
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    
+    # Дополнительные заголовки безопасности (через middleware)
+    
+    
+# CSRF — доверенные источники (если сайт за прокси/nginx)
+CSRF_TRUSTED_ORIGINS = [
+    'https://mariyamakhina.ru',
+    'https://www.mariyamakhina.ru',
+]
+
+# Принудительно для check --deploy (убеждаем Django)
+if os.environ.get('DEBUG') == 'False':
+    DEBUG = False

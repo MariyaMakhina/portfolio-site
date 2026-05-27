@@ -18,10 +18,10 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}{% endblock %} | Портфолио</title>
+    <title>{% if page.seo_title %}{{ page.seo_title }}{% else %}{{ page.title }}{% endif %}</title>
 
     {% if page.search_description %}
-    <meta name="description" content="{{ page.search_description }}" />
+    <meta name="description" content="{% if page.search_description %}{{ page.search_description }}{% else %}Готовые шаблоны сайтов на Wagtail и Django. Быстро, качественно, под ключ.{% endif %}">
     {% endif %}
     
    
@@ -269,5 +269,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.carousel-container').forEach(initCarousel);
 });
 </script>
+{% load static %}
+<script src="{% static 'js/cookies.js' %}"></script>
 </body>
 </html>

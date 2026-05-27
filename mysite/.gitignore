@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.Python
+  venv/
+env/
+ENV/
+
+# Django / Wagtail
+db.sqlite3
+*.log
+media/
+staticfiles/
+
+# Только локальные файлы
+.env
+.env.dev
+.vscode/
+.idea/
+
+# Git
+*.orig
+
+# Wagtail specific
+media/
+staticfiles/
+.env
