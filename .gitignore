@@ -250,3 +250,15 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Игнорируем собранную статику, но не исходную
+static/
+staticfiles/
+static_root/
+
+# Исключение для исходной статики приложений
+!mysite/*/static/
+!*/static/
+
+#======================
+/быстрые_команды

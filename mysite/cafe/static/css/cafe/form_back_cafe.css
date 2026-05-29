@@ -1,0 +1,344 @@
+.form_fields {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1vw;
+  margin: 3vw auto;
+  width: 90%;
+  background-color: rgba(255, 255, 255, 0.7);
+  border-radius: 15px;
+  padding: 40px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+}
+form {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.title-booking {
+  color: var(--color-green-dark);
+    font: 1.7rem Full-bold;
+}
+.item-centr{
+  width: 100%;
+  text-align: center;
+}
+.row-form {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 45%;
+}
+.form_item, .form_item-textarea{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 1vw;
+  margin-bottom: 1vw;
+
+  label{
+    text-align: left;
+    color: var(--color-dark-brown);
+    font: 1.1rem Full-text;
+    display: none;
+  }
+}
+.form_item {
+  flex-basis: 45%;
+}
+.form_item-textarea  {
+  flex-basis: 100%;
+  margin-top: 2vw;
+}
+textarea{
+  height:5vw;
+  padding: 1.5vw;
+}
+input{
+  height: 3vw;
+  padding-left: 1vw;
+}
+textarea, input {
+  background-color: var(--color-background);
+  border: none;
+  border-bottom: 2px solid var(--color-dark-brown);
+  color: var(--color-dark-brown);
+  font: 1rem Full-text;
+  /* убираем стандартный бордер чтобы наш в фокусе заработал*/
+  outline: none;
+  transition: all 0.15s ease;
+
+  &::placeholder{
+    font: 1rem Full-text;
+    color: var(--color-dark-brown);
+  }
+}
+textarea:focus, input:focus {
+    border-color: transparent transparent #3A918C transparent;
+    border-width: 1px 1px 2px 1px;
+    background-color: rgba(255, 255, 255, 0.2);
+    box-shadow: none;
+}
+.submitBtn {
+  font: 1.7rem Full-bold;
+  color: var(--color-dark-brown);
+  background-color: var(--color-green-dark);
+  border-radius: 15px;
+  border: none;
+  height: 4.5vw;
+  width: 25vw;
+  transition: all 0.5s ease;
+  margin: 2vw auto auto auto;
+  letter-spacing: 0.05rem;
+
+  &:hover {
+    background-color: var(--color-green);
+  }
+}
+
+/* Отключаем стандартное автозаполнение */
+.booking-form .form-control:-webkit-autofill,
+.booking-form .form-control:-webkit-autofill:hover,
+.booking-form .form-control:-webkit-autofill:focus,
+.booking-form .form-control:-webkit-autofill:active {
+    -webkit-text-fill-color: var(--color-dark-brown) !important;
+    color: var(--color-dark-brown) !important;
+    background-color: transparent !important;
+    transition: background-color 5000s ease-in-out 0s;
+
+}
+
+/* Для Firefox */
+.booking-form .form-control:autofill {
+    background-color: transparent !important;
+    color: var(--color-dark-brown) !important;
+
+}
+
+/* ===== ДИАЛОГОВОЕ ОКНО ===== */
+.dialog-form {
+    padding: 0;
+    border: none;
+    border-radius: 15px;
+    background-color: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    max-width: 450px;
+    width: 90%;
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+    animation: dialog-appear 0.3s ease;
+}
+
+.dialog-form::backdrop {
+    background-color: rgba(43, 37, 34, 0.8);
+    backdrop-filter: blur(5px);
+    animation: backdrop-appear 0.3s ease;
+}
+
+@keyframes dialog-appear {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes backdrop-appear {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.dialog-content {
+    display: flex;
+    flex-direction: column;
+    padding: 30px;
+    gap: 20px;
+}
+
+.dialog-content.success {
+    background-color: rgba(58, 145, 140, 0.05);
+    border-radius: 15px;
+}
+
+.dialog-content.error {
+    background-color: rgba(255, 99, 71, 0.05);
+    border-radius: 15px;
+}
+
+.dialog-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    border-bottom: 2px solid var(--color-green-dark);
+    padding-bottom: 15px;
+}
+
+.dialog-content.error .dialog-header {
+    border-bottom-color: #FF6347;
+}
+
+.dialog-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+}
+
+.success .dialog-icon {
+    background-color: var(--color-green-dark);
+}
+
+.error .dialog-icon {
+    background-color: #FF6347;
+}
+
+.dialog-title {
+    margin: 0;
+    font: 1.7rem Full-bold;
+    color: var(--color-dark-brown);
+    flex: 1;
+    text-align: center;
+}
+
+.dialog-close {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: var(--color-dark-brown);
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    opacity: 0.6;
+}
+
+.dialog-close:hover {
+    opacity: 1;
+    background-color: rgba(43, 37, 34, 0.1);
+}
+
+.dialog-body {
+    padding: 10px 0;
+    font: 1.1rem Full-text;
+    line-height: 1.6;
+    color: var(--color-dark-brown);
+}
+
+.dialog-body p {
+    margin: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+    text-align: center;
+}
+
+.dialog-footer {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.dialog-button {
+    font: 1.3rem Full-bold;
+    color: var(--color-dark-brown);
+    background-color: var(--color-green-dark);
+    border-radius: 15px;
+    border: none;
+    padding: 12px 40px;
+    transition: all 0.5s ease;
+    cursor: pointer;
+    min-width: 150px;
+}
+
+.dialog-button:hover {
+    background-color: var(--color-green);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Адаптация для мобильных */
+@media (max-width: 1024px) {
+    .title-booking {
+        font-size: 2.5rem;
+    }
+    form {
+        flex-direction: column;
+        gap: 20px;
+    }
+    input, textarea {
+        height: 50px;
+        font-size: 1.5rem;
+    }
+    textarea {
+        height: 100px;
+    }
+    textarea::placeholder, input::placeholder {
+        font-size: 1.5rem;
+    }
+    .submitBtn {
+        font-size: 2rem;
+        height: 70px;
+        width: 70%;
+    }
+}
+@media (max-width: 768px) {
+    .dialog-content {
+        padding: 20px;
+        gap: 15px;
+    }
+    
+    .dialog-header {
+        gap: 10px;
+        padding-bottom: 10px;
+    }
+    
+    .dialog-icon {
+        width: 35px;
+        height: 35px;
+        font-size: 20px;
+    }
+    
+    .dialog-title {
+        font-size: 1.4rem;
+    }
+    
+    .dialog-body {
+        font-size: 1rem;
+    }
+    
+    .dialog-button {
+        font-size: 1.1rem;
+        padding: 10px 30px;
+        min-width: 120px;
+    }
+    
+}
+
+@media (max-width: 480px) {
+    .dialog-content {
+        padding: 15px;
+    }
+    
+    .dialog-title {
+        font-size: 1.2rem;
+    }
+    
+    .dialog-button {
+        width: 100%;
+    }
+   
+}
