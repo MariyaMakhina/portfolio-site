@@ -1,0 +1,47 @@
+:root {
+    --color-background: #223243;
+    --color-text: white;
+    --color-biruza: #00dfc4;
+    --shadow-line:-5px -5px 15px rgba(255, 255, 255, 0.25), 5px 5px 15px rgba(0, 0, 0, 0.5);
+    --shadow-fields: -0.5em -0.5em 1em rgba(255, 255, 255, 0.10), 0.5em 0.5em 1em rgba(0, 0, 0, 0.25);
+    --shadow-button: inset -0.2em -0.5em 0.5em rgba(255, 255, 255, 0.10), inset 0.2em 0.5em 0.5em rgba(0, 0, 0, 0.25), var(--shadow-fields);
+    --shadow-black: 5px 5px 10px rgba(0, 0, 0, 0.20), -5px -5px 10px rgba(0, 0, 0, 0.20), -5px 5px 10px rgba(0, 0, 0, 0.20), 5px -5px 10px rgba(0, 0, 0, 0.20);
+     
+
+}
+@font-face {
+    font-family: 'Full-light';
+    src: url(../fonts/full-text/Roboto-Light.ttf);
+}
+@font-face {
+    font-family: 'Full-italic';
+    src: url(../fonts/full-text/Roboto-Italic.ttf);
+}
+@font-face {
+    font-family: 'Full-text';
+    src: url(../fonts/full-text/Roboto-Regular.ttf);
+}
+@font-face {
+    font-family: 'Difr-bold';
+    src: url(../fonts/difrent-text/BonaNovaSC-Bold.ttf);
+}
+@font-face {
+    font-family: 'Difr-italic';
+    src: url(../fonts/difrent-text/BonaNovaSC-Italic.ttf);
+}
+@font-face {
+    font-family: 'Difr-text';
+    src: url(../fonts/difrent-text/BonaNovaSC-Regular.ttf);
+}
+@font-face {
+    font-family: 'Title-text';
+    src: url(../fonts/title-text/ElMessiri-Regular.ttf);
+}
+@font-face {
+    font-family: 'Title-bold';
+    src: url(../fonts/title-text/ElMessiri-Bold.ttf);
+}
+@font-face {
+    font-family: 'Title-medium';
+    src: url(../fonts/title-text/ElMessiri-Medium.ttf);
+}

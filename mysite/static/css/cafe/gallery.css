@@ -1,0 +1,82 @@
+@import url(variables_cafe.css);
+
+.gallery-carousel {
+    width: 100%;
+    margin: 0 auto;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+.gallery-slide {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    padding: 20px;
+}
+
+/* Сохраняем существующие стили для контента */
+.gallery-slide .gallery-slide-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    gap: 30px;
+}
+
+.gallery-slide .gallery-image {
+    width: auto;
+    max-height: 100%;
+    border-radius: 15px;
+}
+
+.gallery-slide .gallery-description {
+  color: var(--color-beige-light);
+}
+.gallery-description {
+  font-family: Title-text;
+  line-height: 1.6;
+
+  p {
+    margin: 0 auto;
+    width: 80%;
+    text-indent: 20px; 
+  }
+}
+.mini-block img {
+  margin: auto;
+}
+.gallery-title {
+  text-align: center;
+  margin: 0 0 1rem 0;
+  font-size: 1.2rem;
+}
+/* Треугольник */
+.slick-dark::after,
+.slick-dark::after {
+    content: '';
+    display: block;
+    width: 20px;
+    height: 20px;
+    border: solid var(--color-dark-brown-rgba);
+    border-width: 0 10px 10px 0;
+    transition: all 0.3s ease;
+    border-radius: 5px;
+}
+/* Смещение при наведении */
+.slick-dark:hover::after {
+    border-color: var(--color-dark-brown);
+    margin-left: -5px;    /* Влево */
+    margin-top: -5px;      /* Вверх */
+}
+
+.slick-dark:hover::after {
+    border-color: var(--color-dark-brown);
+    margin-left: 5px;      /* Вправо */
+    margin-top: -5px;       /* Вверх */
+}
+
+/* Адаптация для мобильных */
+@media (max-width: 768px) {
+    .gallery-slide .gallery-slide-content {
+        flex-direction: column;
+        padding: 20px;
+    }
+}

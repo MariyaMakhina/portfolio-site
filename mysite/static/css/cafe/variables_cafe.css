@@ -1,0 +1,32 @@
+:root {
+    --color-dark-brown: #2B2522;
+    --color-dark-brown-rgba: rgba(43, 37, 34, 0.8);
+    --color-brown: #876B51;
+    --color-grey-dark: #414841;
+    --color-grey: #959782;
+    --color-grey-light: #B9BBAC;
+    --color-beige: #D5A872;
+    --color-beige-light: #DED8BD;
+    --color-green-dark: #2D7A77;
+    --color-green: #3A918C;
+    --shadow-line:-5px -5px 15px rgba(255, 255, 255, 0.25), 5px 5px 15px rgba(0, 0, 0, 0.5);
+    --shadow-fields: -0.5em -0.5em 1em rgba(255, 255, 255, 0.10), 0.5em 0.5em 1em rgba(0, 0, 0, 0.25);
+    --shadow-button: inset -0.2em -0.5em 0.5em rgba(255, 255, 255, 0.10), inset 0.2em 0.5em 0.5em rgba(0, 0, 0, 0.25), var(--shadow-fields);
+
+}
+@font-face {
+    font-family: 'Full-bold';
+    src: url(../../fonts/cafe/ArsenalSC-Bold.ttf);
+}
+@font-face {
+    font-family: 'Full-text';
+    src: url(../../fonts/cafe/ArsenalSC-Regular.ttf);
+}
+@font-face {
+    font-family: 'Title-text';
+    src: url(../../fonts/cafe/MontserratAlternates-Regular.ttf);
+}
+@font-face {
+    font-family: 'Title-bold';
+    src: url(../../fonts/cafe/MontserratAlternates-ExtraBold.ttf);
+}

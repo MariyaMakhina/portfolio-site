@@ -1,0 +1,11 @@
+@import url(variables_blog.css);
+
+
+body {
+  font-family: Full-text;
+}
+
+.studio-name {
+  font: 5rem Title-text;
+  
+}

@@ -92,6 +92,7 @@ INSTALLED_APPS = [
     "wagtailmedia",
     'wagtail.contrib.sitemaps',  # для карты сайта
     'debug_toolbar',
+    'django_extensions',
 ]
 
 # Для нормального отображения кириллицы в URL

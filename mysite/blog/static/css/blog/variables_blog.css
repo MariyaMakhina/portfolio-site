@@ -1,0 +1,37 @@
+:root {
+    --color-light-blue: #CBDAD2;
+    --color-dark-blue: #2A4B5B;
+    --color-blue: #6E989D;
+    --color-brown: #5C5A52;
+    --color-green: #797852;
+    --color-grey: #8A8D8C;
+    --color-dusty-blue: #6f818f;
+    --color-white: #F0F7F2; 
+   
+    --bg-shadow: linear-gradient(to top, rgba(0,0,0,0.6), rgba(0, 0, 0, 0.1) 80%, rgba(0, 0, 0, 0));
+
+    --shadow-line:-5px -5px 15px rgba(255, 255, 255, 0.25), 5px 5px 15px rgba(0, 0, 0, 0.5);
+    --shadow-fields: -0.5em -0.5em 1em rgba(255, 255, 255, 0.10), 0.5em 0.5em 1em rgba(0, 0, 0, 0.25);
+    --shadow-button: inset -0.2em -0.5em 0.5em rgba(255, 255, 255, 0.10), inset 0.2em 0.5em 0.5em rgba(0, 0, 0, 0.25), var(--shadow-fields);
+
+}
+@font-face {
+    font-family: 'Text1';
+    src: url(../../fonts/blog/Monteserrat/Montserrat-Medium.ttf);
+}
+@font-face {
+    font-family: 'Text-regular';
+    src: url(../../fonts/blog/Monteserrat/Montserrat-Regular.ttf);
+}
+@font-face {
+    font-family: 'Full-text';
+    src: url(../../fonts/blog/Montserrat_Alternates/MontserratAlternates-Regular.ttf);
+}
+@font-face {
+    font-family: 'Mini-Title-text';
+    src: url(../../fonts/blog/Montserrat_Alternates/MontserratAlternates-Regular.ttf);
+}
+@font-face {
+    font-family: 'Title-text';
+    src: url(../../fonts/blog/KellySlab-Regular.ttf);
+}

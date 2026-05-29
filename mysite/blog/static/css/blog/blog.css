@@ -1,0 +1,1302 @@
+@import url(variables_blog.css);
+
+
+body {
+  font-family: Full-text;
+  margin: 0;
+  padding: 0;
+  background-color: var(--color-white);
+  color: var(--color-dark-blue);
+  user-select: none !important;
+  position: relative;
+}
+.home-page {
+  color: var(--color-white);
+}
+.simple-text {
+  font: 1.1rem Text-regular;
+}
+.flex_row_between {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+/* ==================== header ======================== */
+header {
+  height: 50px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding-top: 20px;
+}
+/* ============соцсети========= */
+.top-left {
+  color: var(--color-dusty-blue);
+}
+ul {
+  list-style: none;
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  align-items: center;
+  margin: 0;
+}
+.icons {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  transition: all 0.3s;
+}
+.ic-telegram {
+  background-image: url(../../img/blog/telegr_light_blue.svg);
+
+  &:hover {
+    background-image: url(../../img/blog/telegr_blue.svg);
+  }
+}
+.ic-whatsup {
+  background-image: url(../../img/blog/whatsup_light_blue.svg);
+
+  &:hover {
+    background-image: url(../../img/blog/whatsup_blue.svg);
+  }
+}
+.ic-vk {
+  background-image: url(../../img/blog/vk_light_blue.svg);
+
+  &:hover {
+    background-image: url(../../img/blog/vk_blue.svg);
+  }
+}
+.ic-insta {
+  background-image: url(../../img/blog/insta_light_blue.svg);
+
+  &:hover {
+    background-image: url(../../img/blog/insta_blue.svg);
+  }
+}
+.ic-mail {
+  background-image: url(../../img/blog/mail_light_blue.svg);
+
+  &:hover {
+    background-image: url(../../img/blog/mail_blue.svg);
+  }
+}
+.ic-phone {
+  background-image: url(../../img/blog/phone_light_blue.svg);
+
+  &:hover {
+    background-image: url(../../img/blog/phone_blue.svg);
+  }
+}
+/* ============соцсети========= */
+
+/* ============меню========= */
+nav {
+    display: flex;
+    gap: 30px;
+    padding-right: 40px;
+}
+
+nav a {
+    position: relative;
+    text-decoration: none;
+    color: var(--color-grey);
+    margin: 0 auto;
+    transition: color 0.3s;
+    padding-top: 2.5px;
+}
+.home-page nav a {
+  color: var(--color-white);
+}
+
+/* Точки между пунктами через CSS */
+nav a:not(:last-child)::after {
+    content: '•';
+    position: absolute;
+    right: -17px;
+    top: 2px;
+    color: var(--color-grey);
+    opacity: 0.6;
+    margin: 0;
+    padding: 0;
+}
+.home-page nav a:not(:last-child)::after {
+  color: var(--color-white);
+}
+
+/* Подчёркивание из середины */
+nav a::before {
+    content: '';
+    position: absolute;
+    bottom: 22px;
+    left: 50%;
+    width: 0;
+    height: 1.5px;
+    background-color: var(--color-grey);
+    transition: width 0.3s ease;
+    transform: translateX(-50%);
+}
+.home-page nav a::before {
+  background-color: var(--color-white);
+}
+nav a.nav-active  {
+  color: var(--color-dark-blue);
+}
+nav a.nav-active::before {
+    width: 100%;
+    background-color: var(--color-dark-blue);
+}
+
+/* При наведении — подчёркивание растёт */
+nav a:hover::before {
+    width: 100%;
+}
+
+/* ============/меню========= */
+
+/* ==================== /header ======================== */
+/* ==================== name ======================== */
+.studio-name {
+  font: 3rem Title-text;
+  font-size: 120px;
+  font-weight: 200;
+  color: transparent;
+  -webkit-text-stroke: 2px #2A4B5B;
+}
+.center-content {
+  margin: 4% auto;
+  text-align: center;
+}
+.title_name {
+  display: inline-block;
+
+  h1 {
+    margin: 0;
+  }
+
+  p {
+    color: var(--color-dusty-blue);
+    font: 1.5rem Mini-Title-text;
+    text-align: right;
+    margin-top: -1.5rem;
+  }
+}
+/* ==================== /name ======================== */
+/* ==================== hero ======================== */
+
+.hero {
+  height: 100svh;
+  color: var(--color-white);
+
+}
+.photo-credit {  /* подпись главного фото */
+  font-size: 0.7rem;
+}
+
+/* ==================== /hero ======================== */
+/* ==================== hero footer ======================== */
+.footer-hero {
+  position: fixed;
+  bottom: 0;
+  flex-wrap: wrap;
+  width: 100%;
+}
+.nav-footer {
+  padding-bottom: 40px;
+  padding-left: 40px;
+}
+/* Подчёркивание из середины */
+.nav-footer a::before {
+    bottom: -2px;
+}
+.photo-credit {
+  padding-right: 40px;
+  opacity: 70%;
+  padding-top: 20px;
+}
+/* ==================== hero footer ======================== */
+/* ==================== footer ======================== */
+.copyright {
+  width: 100%;
+  text-align: center;
+  font-family: Text1;
+
+  a {
+    color: var(--color-dark-blue);
+  }
+}
+.line-footer {
+  width: 110%;
+  height: 50px;
+  background: linear-gradient(to bottom, white 30%, var(--color-white));
+  box-shadow: inset 0 4px 4px rgba(111, 129, 143, 0.25);
+}
+footer {
+  overflow: hidden;
+}
+/* ==================== /footer ======================== */
+
+/* ==================== portfolio, blog ======================== */
+.container {
+  margin-top: 20px;
+}
+.page-title {
+  text-align: center;
+  margin: 0 auto;
+}
+.portfolio-filters {
+  width: 100%;
+  text-align: center;
+  margin-top: 15px;
+  color: var(--color-grey);
+
+  span {
+    margin-right: 5px;
+    text-shadow: 0 0 3px rgba(111, 129, 143, 0.3);
+    letter-spacing: 0.5px;
+  }
+
+  a {
+    text-decoration: none;
+    color: var(--color-grey);
+  }
+  .active {
+    color: var(--color-dark-blue);
+    font-weight: bold;
+  }
+}
+.projects-grid {
+  margin: 40px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px;
+}
+.project-card {
+  aspect-ratio: 3 / 4;
+  flex: 0 1 380px;
+  min-width: 200px;
+  max-width: 400px;
+}
+
+.project-image {
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+.project-overlay {
+  background: var(--bg-shadow);
+  min-height: 100px;
+  padding: 20px 10px 10px 10px;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  box-sizing: border-box;
+  color: var(--color-white);
+  font-family: Text-regular;
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+
+  p {
+    margin: 8px auto;
+  }
+  .overlay-content {
+    background-color: rgba(0, 0, 0, 0);
+  }
+}
+
+@keyframes textOpat {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+@keyframes textNotOpat {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes moveUp100 {
+    from {
+      height: 100px;
+      background: var(--bg-shadow);
+    }
+    10%{
+      background: rgba(0, 0, 0, 0.6);
+    }
+    to {
+      background: rgba(0, 0, 0, 0.6);
+      height: 100%;
+    }
+}
+@keyframes moveUp50 {
+    from {
+
+      transform: translateY(0);
+    }
+    20% {
+      font-size: 1.2rem;
+      text-align: center;
+      padding: 40px;
+
+    }
+    to {
+      font-size: 1.2rem;
+      text-align: center;
+      padding: 40px;
+      transform: translateY(-70%);
+    }
+}
+
+@keyframes moveDown {
+    0% {
+      height: 100%;
+      background: var(--bg-shadow);
+    }
+    100% {
+      min-height: 100px;
+      background: var(--bg-shadow);
+
+    }
+}
+@keyframes moveDownText {
+    from {
+      font-size: 1.2rem;
+      transform: translateY(-70%);
+    }
+    50% {
+      font-size: 1rem;
+    }
+    to {
+      transform: translateY(0);
+    }
+}
+
+/* При наведении — анимация вверх */
+.project-image:hover {
+  .project-overlay {
+    animation: moveUp100 0.5s ease forwards;
+  }
+  .project-meta {
+    animation: textOpat 0.5s ease forwards;
+  }
+  .overlay-content {
+    animation: moveUp50 0.5s ease forwards;
+  }
+}
+
+/* При уходе курсора — анимация вниз */
+.project-image:not(:hover) {
+  /* .project-overlay {
+    animation: moveDown 0.5s ease forwards;
+  } */
+    .project-meta {
+    animation: textNotOpat 0.5s ease forwards;
+  }
+  .overlay-content {
+    animation: moveDownText 0.5s ease forwards;
+  }
+}
+.posts-grid {
+  margin: 40px;
+  display: flex;
+  flex-direction: column;
+}
+/* ==================== /portfolio, blog ======================== */
+
+/* =================== Кнопка "Наверх" ================= */
+.scroll-to-top {
+  background-image: url(../../img/blog/button_up.svg);
+  background-size: cover;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50px;
+  position: fixed;
+  bottom: 150px;
+  right: 30px;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  z-index: 1000;
+  box-shadow: -2px 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.scroll-to-top:hover {
+  box-shadow: -4px 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+/* Показываем кнопку */
+.scroll-to-top.show {
+    opacity: 1;
+    visibility: visible;
+}
+/* =================== /Кнопка "Наверх" ================= */
+
+/* =================== Кнопка "Назад" ================= */
+.back-nav{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 40px;
+  position: absolute;
+  top: 10px;
+  left: 0px;
+
+  img {
+    width: 35px;
+    height: 35px;
+    border-radius: 50px;
+  }
+}
+
+a.back-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: 30px;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+  padding: 2px 20px 2px 1px;
+  text-decoration: none;
+  color: var(--color-dusty-blue);
+}
+a.back-link:hover  {
+  color: var(--color-dark-blue);
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+
+  img {
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+  }
+}
+
+
+/* =================== /Кнопка "Назад" ================= */
+
+/* =================== Пагинация ================= */
+.pagination {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 10px;
+}
+
+.but a {
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  width: 40px;
+  height: 40px;
+  color: var(--color-dusty-blue);
+  font-size: 1rem;
+  transition: all 0.3s;
+  background-image: url(../../img/blog/button_page.svg);
+  background-size: cover;
+  border-radius: 50px;
+  z-index: 999;
+  transform: translate(63%, -15%);
+}
+
+.but {
+    width: 58px;
+    height: 58px;
+    border-radius: 0;
+    background-image: url(../../img/blog/shadow_botton.svg);
+    background-size: cover;
+    position: relative;
+}
+
+.current, .next, .prev {
+  font-weight: bold;
+}
+/* =================== /Пагинация ================= */
+
+/* =================== Проекты ================= */
+.project-detail {
+  margin: 0 120px;
+}
+.project-category-label {
+  text-shadow: 0 0 3px rgba(111, 129, 143, 0.3);
+  letter-spacing: 0.5px;
+}
+.project-date {
+  text-align: end;
+}
+.date_category {
+  text-align: center;
+}
+.project-title {
+  text-align: center;
+}
+.project-main-image {
+  gap: 40px;
+  overflow: auto;
+
+  img {
+    max-height: 80vh;
+    max-width: 55vw;
+    float: left;
+    margin: 0 40px 0 0;
+  }
+
+  h1 {
+    margin-top: 0;
+  }
+}
+.clearfix {
+  clear: both;
+
+}
+.blog-intro {
+  margin: 10px 0;
+}
+.blog-content {
+  margin-bottom: 10px;
+  img {
+    max-height: 50vh;
+    width: auto;
+    margin: 5px;
+  }
+  ul {
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+  }
+}
+img.left {
+  float: right;
+  margin-left: 20px;
+}
+img.right {
+  float: left;
+  margin-right: 20px;
+}
+img.full-width{
+  display: block;
+  margin: 0 auto;
+}
+.post-link {
+  text-decoration: none;
+}
+.post-card {
+  width: 100%;
+  height: 300px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  gap: 20px;
+  margin: 20px 0;
+  color: var(--color-dark-blue);
+
+  .post-image{
+    height: 100%;
+    min-width: 500px;
+    width: 700px;
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+  .post-overlay {
+    width: 40%;
+  }
+  .post-short-desc {
+    text-align: justify;
+    margin-top: 0;
+  }
+}
+.post-tags {
+  color: var(--color-grey);
+}
+.point {
+  margin: 0 10px;
+}
+/* Галерея изображений */
+.photo-grid {
+    column-count: 3;
+    column-gap: 20px;
+    margin: 40px 0;
+}
+.justify-class {
+  text-align: justify;
+}
+.center-class {
+  text-align: center;
+}
+
+.grid-item {
+    break-inside: avoid;
+    margin-bottom: 20px;
+    overflow: hidden;
+    background-color: #f5f5f5;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.grid-image {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+.blog-tags {
+  margin: 10px 0;
+  text-align: end;
+  color: var(--color-grey);
+  word-wrap: normal;
+}
+.tag-link {
+  color: var(--color-grey);
+  word-wrap: normal;
+}
+/* =================== /Проекты ================= */
+/* =================== О студии ================= */
+.about-page {
+  margin: 0 40px;
+  display: flex;
+  gap: 40px;
+}
+.about-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  z-index: -1;
+  opacity: 30%;
+  filter: blur(5px);
+
+  .gradient-div {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, #F0F7F2 30px, transparent 100px);
+  }
+}
+.page-mini_title {
+  text-align: center;
+  font-weight: bold;
+}
+.about-intro {
+  margin: 40px 0;
+}
+/* Скрываем пустые абзацы */
+.about-intro p:empty {
+    display: none;
+}
+.grid-block {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+.content-item {
+  h3 {
+    margin: 0;
+  }
+}
+.team-title, .team-subtitle {
+  margin: 10px auto;
+}
+.team-grid {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 20px;
+}
+.team-card {
+  width: 300px;
+}
+.team-photo{
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+.team-name, .team-position, .about-footer {
+  text-align: center;
+}
+.team-description {
+  text-align: justify;
+}
+.line-footer-about {
+  border-top: 1px solid var(--color-grey);
+  margin: 40px 0;
+}
+/* =================== /О студии ================= */
+/* =================== Контакты ================= */
+
+.contact-page{
+  margin: 0 40px;
+}
+  .contact-intro {
+  text-indent: 20px;
+}
+.contact-info-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 40px;
+  justify-content: space-evenly;
+
+  h3, .map-address {
+    text-align: center;
+  }
+}
+.contact-list {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  padding: 0;
+
+  li {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
+    gap: 10px;
+  }
+}
+.contact-details {
+  width: 500px;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: start;
+  margin-bottom: 40px;
+}
+.contact-map {
+  width: 500px;
+}
+/* Форма */
+.contact-form-section {
+    margin: 20px auto 0 auto;
+    width: 100%;
+    border-top: 1px solid var(--color-grey);
+}
+.fields_row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+.contact-form-section h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: var(--color-dark-blue);
+}
+.form-group {
+    margin-bottom: 20px;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--color-dark-blue);
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 5px;
+    font-family: inherit;
+    font-size: 1rem;
+    border: none;
+}
+.form-group select {
+    height: 31.64px;  /* такая же, как у input */
+    padding: 0 12px;
+    line-height: 48px;
+    padding: 5px;
+}
+.form-group select,
+.form-group input[type="date"] {
+    font-family: Full-text;
+}
+/* Фон всего выпадающего списка */
+.form-group select option {
+    background-color: var(--color-white);
+    color: var(--color-dark-blue);
+    padding: 10px;
+}
+
+/* При наведении на вариант */
+.form-group select option:hover {
+    background-color: var(--color-white);
+    color: var(--color-grey);
+}
+
+/* Для Chrome/Edge (немного ограничено) */
+.form-group select:focus option {
+    background-color: var(--color-white);
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+}
+
+.submit-btn {
+    display: block;
+    width: 50%;
+    margin: auto;
+    padding: 12px;
+    background: var(--color-dusty-blue);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.submit-btn:hover {
+    background: var(--color-dusty-blue);
+}
+
+/* Модальное окно */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+.modal.open,
+.modal.show {
+    display: flex !important;  /* проверка */
+}
+
+.modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 16px;
+    max-width: 400px;
+    text-align: center;
+    position: relative;
+}
+
+.modal-close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--color-grey);
+}
+
+.modal-close:hover {
+    color: var(--color-dark-blue);
+}
+/* =================== /Контакты ================= */
+/* ==================== Бургер-меню и оверлей ==================== */
+
+/* Кнопка бургер */
+.burger-menu {
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 32px;
+    height: 30px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 1100;
+}
+.burger-menu span {
+    display: block;
+    width: 100%;
+    height: 3px;
+    background-color: var(--color-dark-blue);
+    transition: all 0.3s ease;
+}
+.home-page {
+    background-color: var(--color-white);
+}
+.burger-menu.open span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+}
+.burger-menu.open span:nth-child(2) {
+    opacity: 0;
+}
+.burger-menu.open span:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -6px);
+}
+
+/* Выезжающее меню (справа) */
+#mainMenu {
+    position: fixed;
+    top: 0;
+    right: -400px;
+    width: 280px;
+    height: 100%;
+    background-color: var(--color-white);
+    box-shadow: -2px 0 15px rgba(0, 0, 0, 0.1);
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 60px 25px 30px;
+    transition: right 0.3s ease;
+    z-index: 1200;
+    gap: 20px;
+    overflow-y: auto;
+}
+#mainMenu.open {
+    right: 0;
+}
+.nav-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--color-grey);
+}
+.nav-logo {
+    font: 1.5rem Mini-Title-text;
+    font-weight: 600;
+    color: var(--color-dark-blue);
+}
+.close-menu {
+    background: none;
+    border: none;
+    font-size: 30px;
+    cursor: pointer;
+    color: var(--color-grey);
+    transition: color 0.3s;
+}
+.close-menu:hover {
+    color: var(--color-dark-blue);
+}
+#mainMenu a {
+    font-size: 1.5rem;
+    padding: 10px 0;
+    color: var(--color-dark-blue);
+    text-decoration: none;
+    width: 100%;
+}
+#mainMenu a:hover,
+#mainMenu a.nav-active {
+    color: var(--color-dusty-blue);
+}
+#mainMenu a:not(:last-child)::after {
+    display: none;
+}
+#mainMenu a::before {
+    display: none;
+}
+
+/* Оверлей */
+.menu-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1150;
+}
+.menu-overlay.open {
+    display: block;
+}
+/* =================== Адаптив ================= */
+@media (max-width: 1280px) {
+  .project-title {
+    font-size: 1.3rem;
+  }
+  .simple-text {
+    font-size: 1rem;
+  }
+  .project-detail {
+    margin: 0 40px;
+  }
+}
+@media (max-width: 1024px) {
+  .center-content {
+    margin: 6% 30px;
+  }
+  .post-card .post-image {
+    width: 60%;
+    min-width: 100px;
+    background-position: center;
+  }
+  .title_name p {
+    text-align: center;
+    margin-top: 10px;
+  }
+}
+/* Десктоп (от 769px) */
+@media (min-width: 769px) {
+  .burger-menu,
+  #mainMenu,
+  .menu-overlay {
+    display: none;
+  }
+  
+  .desktop-nav {
+    display: flex;
+  }
+  
+  .header-center {
+    display: flex;
+  }
+  .header-left {
+    display: none;
+  }
+}
+@media (max-width: 768px) {
+  body{
+    font-size: 1.8rem;
+  }
+  header ul {
+    gap: 20px;
+  }
+  header {
+    padding-top: 40px;
+    height: 32px;
+    gap: 20px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    margin-bottom: 30px;
+  }
+  .nav-footer {
+    margin: 30px auto;
+    padding: 0;
+  }
+  nav {
+    gap: 20px;
+  }
+  .studio-name {
+    font-size: 7vh;
+  }
+  .title_name p {
+    font-size: 1.3rem;
+  }
+  .nav-footer a {
+    font-size: 1rem;
+  }
+  .about-page h1{
+    margin-top: 0;
+  }
+  .team-section h2, .team-section p {
+    margin: 10px auto;
+  }
+  .about-intro {
+    margin: 20px auto;
+  }
+  .nav-footer nav a {
+    text-shadow: 2px 2px 2px var(--color-dark-blue);
+  }
+  .back-nav {
+    top: 35px;
+  }
+  a.back-link  {
+    padding: 0;
+  }
+  .back-link img {
+    width: 40px;
+      height: 40px;
+  }
+  .back-nav span {
+    display: none;
+  }
+  .project-main-image {
+    margin-top: 40px;
+  }
+  .desktop-nav {
+    display: none;
+  }
+  .burger-menu {
+    display: flex !important;
+    margin-right: 20px;
+  }  
+  .header-right {
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+  }
+  .header-center .social-icons {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+  .social-icons ul {
+    padding: 0;
+  }
+  .social-icons ul li {
+    height: 40px;
+  }
+  .header-left {
+    display: block;
+  }
+  .page-title {
+    font-size: 2rem;
+    margin: 30px auto;
+  }
+  .portfolio-filters {
+    font-size: 1.3rem;
+    width: 80%;
+    margin: auto;
+    line-height: 1.7;
+  }
+  .project-main-image img {
+    margin: 0 10px 0 0;
+  }
+  footer {
+    font-size: 0.8rem;
+  }
+  .but a {
+    font-size: 1.5rem;
+  }
+  /* Точки между пунктами через CSS */
+  nav a:not(:last-child)::after {
+      display: none;
+  }
+  .nav-footer a {
+    color: var(--color-white) !important;
+    text-shadow: 2px 2px 2px var(--color-grey);
+  }
+  .flex_row_between {
+    justify-content: start;
+  }
+  .photo-credit {
+    padding-bottom: 0;
+    padding-right: 0;
+    margin-left: 20px;
+  }
+  .center-content {
+    margin-top: 80px;
+  }
+  .icons {
+    width: 32px;
+    height: 32px;
+  }
+  .top-left {
+    margin: auto;
+  }
+  .post-card .post-overlay {
+      font-size: 1.1rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+  }
+  .blog-tags {
+    font-size: 1rem;
+  }
+/* модальное окно */
+    .contact-info-row {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+    .contact-form-section {
+        padding: 25px;
+    }
+/* галерея изображений */
+    .photo-grid {
+        column-count: 2;
+    }
+  .contact-map {
+    width: 80vw;
+  }
+  .contact-map iframe{
+    margin: auto;
+    display: block;
+    max-width: 100%;
+  }
+  .contact-info-row {
+    justify-content: center;
+    align-items: center;
+  }
+  .contact-form-section {
+    width: 90%;
+  }
+  #feedbackForm, .fields_row, .form-group, label, input, textarea {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .photo-grid {
+      column-count: 1;
+  }
+  .project-main-image {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+  }
+  
+  /* Текст выше изображения */
+  .project-main-image h1,
+  .project-main-image .date_category,
+  .project-main-image .blog-tags,
+  .project-main-image .blog-intro {
+      order: -1;  /* поднимает элементы вверх */
+  }
+  
+  .project-main-image img {
+      order: 1;   /* изображение опускается вниз */
+      width: 100% !important;
+      margin: 0;
+      padding: 0;
+      max-width: 100%;
+  }
+  .project-description {
+    text-align: justify;
+  }
+  .post-card {
+      display: flex;
+      flex-direction: column;  /* элементы вертикально */
+      gap: 10px;
+  }
+  
+  /* Текст выше изображения */
+  .post-card .post-overlay {
+      order: -1;  /* поднимаем текст наверх */
+      width: 100%;
+  }
+  
+  .post-card .post-image {
+    order: 1;   /* изображение вниз */
+    width: 100%;
+    margin-top: -30px;
+  }
+  .posts-grid{
+    margin: 10px 30px;
+  }
+  .blog-content img.left, .blog-content img.right {
+    float: none;
+    margin: auto;
+    width: 100%;
+  }
+  .grid-block {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+/* =================== /Адаптив ================= */
