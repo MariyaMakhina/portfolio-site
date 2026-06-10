@@ -25,6 +25,7 @@ from .blocks import CarouselBlock
 from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
 from wagtail.snippets.models import register_snippet
+from chat_bot.utils.telegram import notify_lead
 
 
 # ============ Блог портфолио ============
@@ -239,6 +240,13 @@ URL: {self.full_url if self.full_url else 'Локальная разработк
                     'email_or_phone': email_or_phone,
                     'message': message
                 })
+                # Отправка в Telegram
+                notify_lead(
+                    name=name,
+                    contact=email_or_phone,
+                    message=message,
+                    page_url=request.build_absolute_uri() if request else '',
+                )
                 
                 if request.headers.get('x-requested-with') == 'XMLHttpRequest':
                     return JsonResponse({'success': True, 'message': 'Сообщение успешно отправлено', 'email_sent': email_sent, 'file_saved': filepath})

@@ -73,9 +73,20 @@ def dashboard_view(request):
         'values': publications,
     }
     
+    # ID Яндекс.Вебмастера (можно добавить в настройки)
+    yandex_webmaster_id = None
+    try:
+        from dashboard.models import AnalyticsSettings
+        analytics_settings = AnalyticsSettings.for_request(request)
+        yandex_metrika_id = analytics_settings.yandex_metrika_id
+        yandex_webmaster_id = getattr(analytics_settings, 'yandex_webmaster_id', None)
+    except:
+        yandex_metrika_id = None
+    
     # === РОДИТЕЛЬСКАЯ СТРАНИЦА ДЛЯ ПРОЕКТОВ ===
     projects_parent = ProjectsListPage.objects.first()
     projects_parent_id = projects_parent.id if projects_parent else None
+    
     
     # === СОЗДАЁМ КОНТЕКСТ ===
     context = {
@@ -93,6 +104,7 @@ def dashboard_view(request):
         'projects_parent_id': projects_parent_id,
         'yandex_metrika_id': yandex_metrika_id,
         'chart_data_json': json.dumps(chart_data),
+        'yandex_webmaster_id': yandex_webmaster_id,
     }
     
     return render(request, 'dashboard/index.html', context)

@@ -13,9 +13,9 @@
         <div class="box">
             <div class="imag-proj">
                 {% if self.card_image %}
-                    {% image self.card_image original format-webp as project_img %}
+                    {% image self.card_image fill-330x400 format-webp as project_img %}
                 {% else %}
-                    {% image self.image original format-webp as project_img %}
+                    {% image self.image fill-330x400 format-webp as project_img %}
                 {% endif %}
                 <img src="{{ project_img.url }}" alt="{{ self.title }}">
             </div>

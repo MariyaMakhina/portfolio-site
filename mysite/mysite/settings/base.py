@@ -93,6 +93,7 @@ INSTALLED_APPS = [
     'wagtail.contrib.sitemaps',  # для карты сайта
     'debug_toolbar',
     'django_extensions',
+    'chat_bot',
 ]
 
 # Для нормального отображения кириллицы в URL
@@ -294,3 +295,5 @@ CSRF_TRUSTED_ORIGINS = [
 # Принудительно для check --deploy (убеждаем Django)
 if os.environ.get('DEBUG') == 'False':
     DEBUG = False
+    
+DASHBOARD_URL = os.environ.get('DASHBOARD_URL', 'admin/dashboard/')

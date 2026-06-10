@@ -12,3 +12,11 @@ try:
     from .local import *
 except ImportError:
     pass
+
+
+# ===== Telegram =====
+TELEGRAM_BOT_TOKEN = '796xxxxxx:AAH...'  # реальный токен
+TELEGRAM_CHAT_ID = '123456789'           # ваш chat_id
+
+# ===== Groq AI =====
+GROQ_API_KEY = 'gsk_...'  # реальный ключ

@@ -26,9 +26,10 @@ def sitemap_view(request):
 
 
 urlpatterns = [
+    path('', include('chat_bot.urls')),
     # Используем переменные из настроек
     path(settings.DJANGO_ADMIN_URL, admin.site.urls),
-    path('admin/dashboard/', include('dashboard.urls')),
+    path(settings.DASHBOARD_URL, include('dashboard.urls')),
     path(settings.WAGTAIL_ADMIN_URL, include(wagtailadmin_urls)),
     path("documents/", include(wagtaildocs_urls)),
     path("search/", search_views.search, name="search"),
